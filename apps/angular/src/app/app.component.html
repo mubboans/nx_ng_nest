@@ -1,2 +1,12 @@
-<app-nx-welcome></app-nx-welcome>
-<router-outlet></router-outlet>
+
+<nz-layout>
+  <nz-header><app-navbar></app-navbar></nz-header>
+  <nz-layout>
+    <nz-sider><app-sidebar></app-sidebar></nz-sider>
+    <nz-content>
+      <router-outlet></router-outlet>
+      <app-nx-welcome></app-nx-welcome>
+    </nz-content>
+  </nz-layout>
+  <nz-footer><app-footer></app-footer></nz-footer>
+</nz-layout>

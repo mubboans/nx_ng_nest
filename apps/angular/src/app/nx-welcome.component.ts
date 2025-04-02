@@ -1,9 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { LoginComponent } from '../components/login/login.component';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 @Component({
   selector: 'app-nx-welcome',
-  imports: [CommonModule],
+  imports: [CommonModule, LoginComponent, NzButtonModule ],
   template: `
     <!--
      * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -11,7 +12,7 @@ import { CommonModule } from '@angular/common';
      * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      Delete this file and get started with your project!
      * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     -->
+
     <style>
       html {
         -webkit-text-size-adjust: 100%;
@@ -428,14 +429,14 @@ import { CommonModule } from '@angular/common';
     </style>
     <div class="wrapper">
       <div class="container">
-        <!--  WELCOME  -->
+
         <div id="welcome">
           <h1>
             <span> Hello there, </span>
-            Welcome angular 👋
+            Welcome Mubashir 👋
           </h1>
         </div>
-        <!--  HERO  -->
+
         <div id="hero" class="rounded">
           <div class="text-container">
             <h2>
@@ -469,7 +470,7 @@ import { CommonModule } from '@angular/common';
             </svg>
           </div>
         </div>
-        <!--  MIDDLE CONTENT  -->
+
         <div id="middle-content">
           <div id="middle-left-content">
             <div id="learning-materials" class="rounded shadow">
@@ -751,7 +752,7 @@ import { CommonModule } from '@angular/common';
             </div>
           </div>
         </div>
-        <!--  COMMANDS  -->
+
         <div id="commands" class="rounded shadow">
           <h2>Next steps</h2>
           <p>Here are some things you can do with Nx:</p>
@@ -773,11 +774,11 @@ import { CommonModule } from '@angular/common';
               Build, test and lint your app
             </summary>
             <pre><span># Build</span>
-nx build 
+nx build
 <span># Test</span>
-nx test 
+nx test
 <span># Lint</span>
-nx lint 
+nx lint
 <span># Run them together!</span>
 nx run-many -t build test lint</pre>
           </details>
@@ -862,6 +863,10 @@ nx g &#64;nx/angular:component ui/src/lib/button</pre>
         </p>
       </div>
     </div>
+   -->
+    <h1>Hello Mubashir Angular Works </h1>
+    <app-login></app-login>
+    <button nz-button nzType="primary">Primary</button>
   `,
   styles: [],
   encapsulation: ViewEncapsulation.None,

@@ -22,7 +22,10 @@
             "input": "apps/angular/public"
           }
         ],
-        "styles": ["apps/angular/src/styles.scss"],
+        "styles": [
+          "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+          "apps/angular/src/styles.scss"
+        ],
         "scripts": []
       },
       "configurations": {
