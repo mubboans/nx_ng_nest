@@ -1,0 +1,46 @@
+<nz-card style="width: 100%;" nzTitle="Category Data" [nzExtra]="extraTemplate">
+  <nz-table nzShowSizeChanger [nzData]="cateogryList" [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex">
+    <thead>
+      <tr>
+        <th nzColumnKey="name" [nzSortFn]="true">Name</th>
+        <th nzColumnKey="description">Description</th>
+        <th nzColumnKey="status" [nzFilters]="filterStatus" [nzSortFn]="true">Status</th>
+        <th>Slug</th>
+        <th >Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (data of cateogryList; track data) {
+      <tr>
+        <td>{{ data.name }}</td>
+        <td>{{ data.description }}</td>
+        <td>{{ data.status }}</td>
+        <td>{{ data.slug }}</td>
+        <td>
+          <button nz-button nzType="dashed" (click)="editCategory(data)">
+            Edit
+          </button>
+          <button nz-button nzType="dashed" (click)="deleteCategory(data)">Delete</button>
+      </tr>
+      }
+    </tbody>
+  </nz-table>
+</nz-card>
+
+
+<nz-modal [(nzVisible)]="showModal" nzTitle="Modal Title" (nzOnCancel)="handleCancel()" (nzOnOk)="submitModal()"
+  [nzOkLoading]="isModalLoading" nzCentered="true" [nzWidth]="700" nzTa>
+  <p *nzModalContent>Modal Content</p>
+</nz-modal>
+
+
+<ng-template #extraTemplate>
+  <button nz-button nzType="default" (click)="addCategory()" >
+    <nz-icon nzType="plus-circle" />
+    Add
+  </button>
+
+</ng-template>
+<br />
+<br />

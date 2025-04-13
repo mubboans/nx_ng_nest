@@ -1,0 +1,8 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep .ant-input-otp-input {
+  @apply w-8 h-10 sm:w-10 sm:h-12 text-lg sm:text-xl;
+}

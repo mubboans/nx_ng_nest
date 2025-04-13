@@ -1,5 +1,26 @@
 <div class="flex items-center justify-center gap-2">
-  <button nz-button nzType="primary">Primary</button>
-  <button nz-button nzType="default">secondary</button>
-  <button nz-button nzType="dashed">warn</button>
+
+<div class="p-6 mx-auto bg-white rounded-xl shadow-md mt-10">
+  <div class="flex flex-col space-y-6 items-center">
+
+    <!-- Welcome Text -->
+    <div class="text-xl font-medium text-black text-center">
+      Welcome Back..!
+    </div>
+
+    <!-- Email Input -->
+    <nz-input-group [nzSuffix]="suffixIconSearch" class="w-full">
+      <input type="text" nz-input placeholder="Enter your personal or work email" class="w-full" />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <nz-icon nzType="user" />
+    </ng-template>
+
+    <!-- Button -->
+    <button nz-button nzType="link" [nzSize]="'large'" nzShape="round" class="flex items-center gap-2" (click)="submit()" [nzLoading]="isLoading">
+      <nz-icon nzType="login" />
+      Send Code
+    </button>
+  </div>
+</div>
 </div>

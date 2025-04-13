@@ -1,0 +1,68 @@
+<!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
+<!-- Have a verification code instead?
+
+Enter the code generated from the link sent to
+
+ansmubasshirr@gmail.com -->
+
+<!-- <nz-flex nzVertical>
+  <h5 nz-typography>With Length (8)</h5>
+  <nz-input-otp [nzLength]="8"></nz-input-otp>
+</nz-flex> -->
+
+
+
+<div class="w-full flex justify-center p-4 m-4 mx-auto">
+  <div class="w-full max-w-md p-4 sm:p-6 bg-white rounded-lg shadow-md">
+    <!-- Header -->
+    <nz-flex nzVertical nzGap="middle" class="text-center mb-6">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-800">{{ title }}</h2>
+      <p class="text-gray-600">{{ subtitle }}</p>
+      @if (emailOrPhone) {
+        <p class="text-sm font-medium text-gray-700">
+          Code sent to {{ maskEmailOrPhone(emailOrPhone) }}
+        </p>
+      }
+    </nz-flex>
+
+    <!-- OTP Input -->
+    <nz-flex nzVertical nzGap="middle" class="text-center mb-6">
+      <label class="block text-sm font-medium text-gray-700">Enter verification code</label>
+
+      <div class="w-full">
+        <nz-input-otp [(ngModel)]="otpValue" [nzLength]="otpLength"
+          [nzStatus]="showError ? 'error' : ''" (ngModelChange)="onOtpChange($event)" class="w-full flex items-center justify-center">
+        </nz-input-otp>
+      </div>
+
+      <!-- Error Message -->
+      @if (showError) {
+        <div class="mt-2">
+          <nz-alert nzType="error" [nzMessage]="errorMessage" nzShowIcon></nz-alert>
+        </div>
+      }
+    </nz-flex>
+
+    <!-- Submit Button -->
+    <nz-flex nzJustify="center" class="w-full">
+      <button nz-button nzType="dashed" [nzLoading]="isVerifying" [disabled]="!isOtpValid()" (click)="verifyOtp()"
+        class="w-full h-10 sm:h-12 text-base font-medium rounded-md">
+        Verify
+      </button>
+    </nz-flex>
+
+    <!-- Resend Code -->
+    <nz-flex nzJustify="center" class="mt-6">
+      <p class="text-gray-600 text-sm sm:text-base">
+        Didn't receive the code?
+        <button (click)="resendCode()" [disabled]="resendDisabled"
+          class="text-primary-600 font-medium hover:text-primary-700 focus:outline-none ml-1" type="button">
+          {{ resendDisabled ? 'Resend in ' + resendCountdown + 's' : 'Resend' }}
+        </button>
+      </p>
+    </nz-flex>
+  </div>
+</div>
+
+
+<app-category></app-category>

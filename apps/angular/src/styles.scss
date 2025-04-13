@@ -1,8 +1,5 @@
-@import "ng-zorro-antd/ng-zorro-antd.min.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer tailwind {
-  @import "tailwindcss";
-}
+@import 'ng-zorro-antd/ng-zorro-antd.min.css';
