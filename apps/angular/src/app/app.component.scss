@@ -42,9 +42,21 @@
    min-height: 360px;
  }
 
- nz-footer {
-   text-align: center;
- }
+.full-height-layout {
+  height: 100vh;
+}
+
+.inner-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.main-content {
+  flex: 1 0 auto;
+  padding: 16px;
+  overflow: auto;
+}
 
  .ant-layout-sider {
    position: relative;

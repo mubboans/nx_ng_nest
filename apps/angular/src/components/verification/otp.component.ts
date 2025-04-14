@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzFlexDirective } from 'ng-zorro-antd/flex';
 import { NzInputOtpComponent } from 'ng-zorro-antd/input';
-import { NzTypographyComponent } from 'ng-zorro-antd/typography';
 import { FormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
@@ -14,7 +13,7 @@ import { CategoryComponent } from "../category/category.component";
 
 @Component({
   selector: 'app-otp',
-  imports: [CommonModule, NzFlexDirective, NzTypographyComponent, NzInputOtpComponent, FormsModule, NzButtonModule, NzAlertModule, CategoryComponent],
+  imports: [CommonModule, NzFlexDirective, NzInputOtpComponent, FormsModule, NzButtonModule, NzAlertModule, CategoryComponent],
   templateUrl: './otp.component.html',
   styleUrl: './otp.component.scss',
 })
@@ -39,8 +38,6 @@ export class OtpComponent {
   }
   getStoreData() {
     this.store.select(selectUser).subscribe((state) => {
-      // Assuming the store has a user object with email or phone
-
       console.log(state,' Check state');
       if (state) {
         this.emailOrPhone = state?.email || state?.name || '';

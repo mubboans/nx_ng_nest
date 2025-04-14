@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthHelperDto } from './dto/create-auth-helper.dto';
+import { CreateUserDto } from './dto/create-auth-helper.dto';
 import { UpdateAuthHelperDto } from './dto/update-auth-helper.dto';
 
 @Injectable()
 export class AuthHelperService {
-  create(createAuthHelperDto: CreateAuthHelperDto) {
+  create(createAuthHelperDto: CreateUserDto) {
     return 'This action adds a new authHelper';
   }
 
-  findAll() {
-    return `This action returns all authHelper`;
+  checkUserExists(body: CreateUserDto) {
+    return `This action returns all authHelper ${body?.email}`
   }
 
   findOne(id: number) {

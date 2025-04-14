@@ -1,26 +1,41 @@
-<div class="flex items-center justify-center gap-2">
+<form #loginForm="ngForm" (ngSubmit)="submit()">
+  <div class="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+    <div class="w-full max-w-md bg-white rounded-xl shadow-md p-8">
+      <div class="flex flex-col space-y-6">
 
-<div class="p-6 mx-auto bg-white rounded-xl shadow-md mt-10">
-  <div class="flex flex-col space-y-6 items-center">
+        <!-- Title -->
+        <h2 class="text-2xl font-semibold text-center text-gray-800">
+          Welcome Back..!
+        </h2>
 
-    <!-- Welcome Text -->
-    <div class="text-xl font-medium text-black text-center">
-      Welcome Back..!
+        <p class="text-sm text-gray-600 text-center">
+          Please enter your email to receive a verification code.
+        </p>
+        <!-- Email Input -->
+        <nz-input-group [nzSuffix]="suffixIconSearch">
+          <input type="email" name="email" nz-input required [(ngModel)]="email" #emailModel="ngModel"
+            placeholder="Enter your personal or work email" class="w-full"
+            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" />
+        </nz-input-group>
+        <ng-template #suffixIconSearch>
+          <nz-icon nzType="user" />
+        </ng-template>
+
+        <!-- Error Message -->
+         @if (emailModel.invalid && emailModel.touched) {
+           <p class="text-sm text-red-600 text-center">
+             Please enter a valid email address.
+           </p>
+         }
+        <!-- Send Code Button -->
+        <button nz-button nzType="primary" [nzSize]="'large'" nzShape="round"
+          class="flex justify-center items-center gap-2 w-full" [disabled]="loginForm.invalid || isLoading"
+          [nzLoading]="isLoading">
+          <nz-icon nzType="login" />
+          Send Code
+        </button>
+
+      </div>
     </div>
-
-    <!-- Email Input -->
-    <nz-input-group [nzSuffix]="suffixIconSearch" class="w-full">
-      <input type="text" nz-input placeholder="Enter your personal or work email" class="w-full" />
-    </nz-input-group>
-    <ng-template #suffixIconSearch>
-      <nz-icon nzType="user" />
-    </ng-template>
-
-    <!-- Button -->
-    <button nz-button nzType="link" [nzSize]="'large'" nzShape="round" class="flex items-center gap-2" (click)="submit()" [nzLoading]="isLoading">
-      <nz-icon nzType="login" />
-      Send Code
-    </button>
   </div>
-</div>
-</div>
+</form>

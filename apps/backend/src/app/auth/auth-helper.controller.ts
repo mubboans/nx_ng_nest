@@ -8,21 +8,21 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AuthHelperService } from './auth-helper.service';
-import { CreateAuthHelperDto } from './dto/create-auth-helper.dto';
+import { CreateUserDto } from './dto/create-auth-helper.dto';
 import { UpdateAuthHelperDto } from './dto/update-auth-helper.dto';
 
-@Controller('auth-helper')
+@Controller('auth')
 export class AuthHelperController {
   constructor(private readonly authHelperService: AuthHelperService) {}
 
   @Post()
-  create(@Body() createAuthHelperDto: CreateAuthHelperDto) {
+  create(@Body() createAuthHelperDto: CreateUserDto) {
     return this.authHelperService.create(createAuthHelperDto);
   }
 
-  @Get()
-  findAll() {
-    return this.authHelperService.findAll();
+  @Post('checkUserExists')
+  findAll(@Body() body: CreateUserDto) {
+    return this.authHelperService.checkUserExists(body);
   }
 
   @Get(':id')

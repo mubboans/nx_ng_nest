@@ -1,19 +1,5 @@
-<!--
-<nz-layout>
-  <nz-header><app-navbar></app-navbar></nz-header>
-  <nz-layout>
-    <nz-sider><app-sidebar></app-sidebar></nz-sider>
-    <nz-content>
-      <router-outlet></router-outlet>
-
-    </nz-content>
-  </nz-layout>
-  <nz-footer><app-footer></app-footer></nz-footer>
-</nz-layout> -->
-
-
-
-<nz-layout>
+<nz-layout class="full-height-layout">
+  @if (showSidebar) {
   <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
     <div class="logo"></div>
     <ul nz-menu nzMode="inline">
@@ -36,30 +22,17 @@
       </li>
     </ul>
   </nz-sider>
-  <nz-layout>
+  }
+  <nz-layout class="inner-layout">
+    @if (showSidebar) {
     <nz-header>
       <nz-icon class="trigger" [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
         (click)="isCollapsed = !isCollapsed" />
     </nz-header>
-    <nz-content>
-      <!-- <nz-breadcrumb>
-        <nz-breadcrumb-item>User</nz-breadcrumb-item>
-        <nz-breadcrumb-item>Bill</nz-breadcrumb-item>
-      </nz-breadcrumb> -->
+    }
+    <nz-content class="main-content">
       <router-outlet></router-outlet>
     </nz-content>
-    <nz-footer>Mubashir Assestment©2025 Developed Using Angular</nz-footer>
+    <nz-footer class="footer flex justify-center">Mubashir ©2025 Developed Using Angular</nz-footer>
   </nz-layout>
 </nz-layout>
-
-
-<!-- <div class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4 mt-10">
-  <div class="shrink-0">
-    <nz-icon nzType="login" nzTheme="outline" />
-    <nz-icon nzType="account-book" nzTheme="outline" />
-  </div>
-  <div>
-    <div class="text-xl font-medium text-black">Tailwind Works! ok</div>
-    <p class="text-slate-500">Your setup is good 🚀</p>
-  </div>
-</div> -->
