@@ -18,7 +18,7 @@ import { CategoryComponent } from "../category/category.component";
   styleUrl: './otp.component.scss',
 })
 export class OtpComponent {
-  title = 'OTP Verification';
+  title = 'Enter Code for Verification';
   subtitle = 'Enter the verification code we sent to your device';
   emailOrPhone: string = '';
   otpLength: number = 6;
