@@ -10,6 +10,14 @@ export class CreateOtpDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;
+
+  @ApiProperty({
+    example: 'authentication | password reset ',
+    description: 'Otp Purpose',
+    required: true
+  })
+  @IsNotEmpty()
+  otp_type: string;
 }
 
 export class VerifyCodeDto {
