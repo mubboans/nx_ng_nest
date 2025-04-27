@@ -5,12 +5,12 @@ import { map, catchError, of } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthHelperService {
+export class HttpHelperService {
 
   constructor(private http: HttpClient) { }
 
 
-  fnApiPost(url: string, payload: string) {
+  fnApiPost(url: string, payload: Record<string, any>) {
     return this.http.post(url, payload).pipe(
       map((response: any) => {
         return response.available;

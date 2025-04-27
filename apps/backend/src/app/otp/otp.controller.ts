@@ -3,6 +3,7 @@ import { OtpService } from './otp.service';
 import { CreateOtpDto, VerificationResponseDto, VerifyCodeDto } from './dto/create-otp.dto';
 import { UpdateOtpDto } from './dto/update-otp.dto';
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { returnResponse } from '../utils/success-response';
 
 @ApiTags('User Verification')
 @Controller('otp')
@@ -39,13 +40,10 @@ export class OtpController {
     type: VerificationResponseDto,
     description: 'Verification code sent successfully'
   })
-  @ApiBadRequestResponse({ description: 'Invalid email format' })
+  @ApiBadRequestResponse({ description: 'Invalid email format or type' })
   async sendVerificationCode(@Body() checkUserDto: CreateOtpDto): Promise<VerificationResponseDto> {
-    await this.otpService.sendVerificationCode({to: checkUserDto.email, subject: 'Verification Code', html: 'Your verification code is 123456'});
-    return {
-      success: true,
-      message: 'Verification code sent to email'
-    };
+    await this.otpService.sendVerificationCode({ to: checkUserDto.email, subject: 'OTP for your verification', otp_type: checkUserDto.otp_type });
+    return returnResponse(201, 'Verification code sent', { email: checkUserDto.email });
   }
 
   @Post('verify-code')

@@ -5,6 +5,8 @@ import { SequelizeModule, SequelizeModuleOptions } from '@nestjs/sequelize';
 import { AuthHelperModule } from './auth/auth-helper.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OtpModule } from './otp/otp.module';
+import { CommonModule } from './common/share-module/common.module';
+import { OTP } from './otp/entities/otp.entity';
 @Module({
   imports: [AuthHelperModule, OtpModule,
     ConfigModule.forRoot({
@@ -12,22 +14,20 @@ import { OtpModule } from './otp/otp.module';
     }),
     SequelizeModule.forRootAsync({
       inject: [ConfigService], // ✅ MUST inject the ConfigService
-      useFactory: async (config: ConfigService): Promise<SequelizeModuleOptions> => {
-        console.log(config.get<string>('DB_HOST'),"config.get<string>('DB_HOST')");
-        return {
-      dialectOptions: {
+      useFactory: async (config: ConfigService): Promise<SequelizeModuleOptions> => ({
         dialect: 'mysql',
         host: config.get<string>('DB_HOST'),
-        port: config.get<number>('DB_PORT'),
-        username: config.get<string>('DB_USERNAME'),
+        port: Number(config.get<string>('DB_PORT')), // make sure port is number
+        username: config.get<string>('DB_USER'),     // correct key here
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
         autoLoadModels: true,
         synchronize: true,
-      },
-      }
-      }
+        models: [OTP], // add your models here
+        logging: false,  // optional: turn off SQL logs
+      }),
     }),
+    CommonModule
   ],
   controllers: [AppController],
   providers: [AppService],

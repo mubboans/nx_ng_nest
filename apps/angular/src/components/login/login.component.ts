@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { setUser } from '../../store/store-actions';
 import { FormsModule } from '@angular/forms';
+import { HttpHelperService } from '../../services/http-method-helper.service';
+import { API_URL } from '../../contants/api_contants';
 
 @Component({
   selector: 'app-login',
@@ -18,18 +20,23 @@ import { FormsModule } from '@angular/forms';
 export class LoginComponent {
   isLoading = false;
   showError = false;
-  public email:string | undefined;
+  public email = '';
   public router = inject(Router);
-
+  public httpService = inject(HttpHelperService)
   constructor(private store: Store) {}
 
   public submit(): void {
     this.isLoading = true;
+
     setTimeout(() => {
       this.isLoading= false;
-      console.log('Login successful', this.isLoading);
+      this.httpService.fnApiPost(API_URL.auth.checkuser,{ email: this.email}).subscribe((data) => {
+        if (data.success) {
+          this.showError = false;
+        }
+      })
       this.router.navigate(['/otp']);
-      this.store.dispatch(setUser({name:'Mubashir',email:'tpsmubashir@gmail.com'}))
+      this.store.dispatch(setUser({name:'Mubashir',email:this.email}))
     }, 5000);
   }
 }

@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { CreateOtpDto } from './dto/create-otp.dto';
-import { UpdateOtpDto } from './dto/update-otp.dto';
+import { HttpException, Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import Mailgen from 'mailgen';
 import { ConfigService } from '@nestjs/config';
-import { text } from 'stream/consumers';
+import { DatabaseHelpers } from '../common/database-helper/db-helpers';
+import { OTP } from './entities/otp.entity';
+import { Repository } from 'sequelize-typescript';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class OtpService {
@@ -12,17 +13,15 @@ export class OtpService {
   private transporter: nodemailer.Transporter;
 
   constructor(
-  //   @InjectRepository(User)
-  // private userRepository: Repository<User>,
+    // @InjectModel(OTP)
+    // private readonly OtpModel: typeof OTP,
+    private dbHelperService: DatabaseHelpers,
     private configService: ConfigService) {
     this.mailGenerator = new Mailgen({
       theme: 'default', // Choose a theme (e.g., 'default', 'cerberus', 'salted')
       product: {
         name: this.configService.get<string>('MAILGEN_PRODUCT_NAME') || 'Mubashir',
         link: this.configService.get<string>('MAILGEN_PRODUCT_LINK') || 'https://maentriprisse.com',
-        // Optional:
-        // logo: 'https://example.com/logo.png',
-        // copyright: 'Copyright © 2025 Your App Name'
       },
     });
 
@@ -38,7 +37,7 @@ export class OtpService {
       port: this.configService.get<number>('MAIL_PORT'),
       secure: false,
       auth: {
-        user: this.configService.get<string>('MAIL_USER'),
+        user: this.configService.get<string>('MAIL_USERs'),
         pass: this.configService.get<string>('MAIL_PASSWORD')
       }
     })
@@ -46,8 +45,6 @@ export class OtpService {
   }
 
   async sendVerificationCode(obj) {
-    console.log('enter in send code');
-
     const transport = this.emailTransport();
     const options: nodemailer.SendMailOptions = {
       from: this.configService.get<string>('MAIL_FROM'),
@@ -56,14 +53,42 @@ export class OtpService {
       html: this.getEmailTemplate(this.generateCode(), obj?.to),
     }
     try {
-     await transport.sendMail(options);
-     console.log('Email sent successfully');
+      const otp = this.generateCode();
+      const otpCheck = await this.dbHelperService.fnGet(OTP, { email: obj?.to, otp_type: obj?.otp_type });
+      if (otpCheck.length > 0 ) {
+        // if (!otpRecord) {
+          //   throw new Error('Failed to update OTP');
+          // }
+       const updateOj = {
+         expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+         isVerified: false,
+         otp: otp,
+       }
+        if(new Date(otpCheck[0]?.lastAttempt) > new Date()){
+          throw new HttpException('You have already requested an OTP, please wait for a while', 400);
+        }
+        if (otpCheck[0]?.attemptCount > 3) {
+          updateOj['attemptCount'] = 0;
+        }
+          await this.dbHelperService.fnUpdate(OTP, updateOj, { email: obj?.to, otp_type: obj?.otp_type });
+      }
+
+      await this.dbHelperService.fnPost(OTP, { email: obj?.to, otp: otp, otp_type: obj?.otp_type, expiresAt: new Date(Date.now() + 10 * 60 * 1000) });
+      await transport.sendMail(options);
+      console.log('Email sent successfully:', otpCheck,'also check the otp data');
+      return {
+        success: true,
+        message: 'Email sent successfully',
+        data: {
+          email: obj?.to,
+          otp: otp,
+        },
+      };
     } catch (error) {
       console.log('Error sending email:', error);
-
+      throw new HttpException('Failed to send email', 500);
     }
   }
-
 
   checkUser(email: string): boolean {
 
@@ -73,10 +98,27 @@ export class OtpService {
   verifyCode(email: string, code: string): boolean {
     // Verify the code against the database
     // For demonstration, let's assume the code is valid
+    // In a real application, you would check the code against the database
+    // and possibly check if it has expired
+    // const user = await this.userRepository.findOne({ where: { email } });
+    // if (!user) {
+    //   throw new Error('User not found');
+    // }
+    // if (user.otp !== code) {
+    //   throw new Error('Invalid OTP');
+    // }
+    // if (user.otpExpiresAt < new Date()) {
+    //   throw new Error('OTP expired');
+    // }
+    // Mark the OTP as used or delete it from the database
+    // await this.userRepository.update({ otp: null, otpExpiresAt: null }, { where: { email } });
+    // return true;
+    // For demonstration, let's assume the code is valid
+    // In a real application, you would check the code against the database
     return true;
   }
 
-  public getEmailTemplate(code, email) {
+  public getEmailTemplate(code: string, email: string) {
     const emailTemplate = (otp: string) => ({
       body: {
         greeting: `Hello,`,
@@ -108,8 +150,8 @@ export class OtpService {
     return this.mailGenerator.generate(emailTemplate(code));
   }
 
-  public generateCode() {
+  public generateCode(): string {
     const code = Math.floor(100000 + Math.random() * 900000);
-    return code;
+    return code.toString();
   }
 }
