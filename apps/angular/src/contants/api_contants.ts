@@ -10,7 +10,7 @@ export const API_URL = {
     register: API_ENDPOINTS.auth('register'),
     refreshToken: API_ENDPOINTS.auth('refresh-token'),
     logout: API_ENDPOINTS.auth('logout'),
-    checkuser: API_ENDPOINTS.auth('checkUserExist'),
+    checkuser: API_ENDPOINTS.auth('checkUserExists'),
     forgotPassword: API_ENDPOINTS.auth('forgot-password'),
   },
 };
