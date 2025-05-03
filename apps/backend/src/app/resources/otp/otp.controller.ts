@@ -1,9 +1,8 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { OtpService } from './otp.service';
 import { CreateOtpDto, VerificationResponseDto, VerifyCodeDto } from './dto/create-otp.dto';
-import { UpdateOtpDto } from './dto/update-otp.dto';
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { returnResponse } from '../utils/success-response';
+import { returnResponse } from '../../utils/success-response';
 
 @ApiTags('User Verification')
 @Controller('otp')

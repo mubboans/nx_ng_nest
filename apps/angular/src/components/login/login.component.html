@@ -39,3 +39,52 @@
     </div>
   </div>
 </form>
+
+<nz-modal [(nzVisible)]="isVisibleMiddle" nzTitle="Please enter detail to proceed" nzCentered
+  (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()" [nzOkDisabled]="isModalBtnDisabled">
+  <ng-container *nzModalContent>
+    <form #userForm="ngForm" nz-form [nzLayout]="'vertical'">
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true" nzFor="username">Username</nz-form-label>
+        <nz-form-control>
+          <input nz-input name="username" id="username" [(ngModel)]="user.username" required #username="ngModel" />
+          <div *ngIf="username.invalid && username.touched" class="error">Username is required</div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true" nzFor="email">Email</nz-form-label>
+        <nz-form-control>
+          <input nz-input name="email" id="email" [(ngModel)]="user.email" type="email" required #email="ngModel" />
+          <div *ngIf="email.invalid && email.touched" class="error">Valid Email is required</div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true" nzFor="contact">Contact</nz-form-label>
+        <nz-form-control>
+          <input nz-input name="contact" id="contact" [(ngModel)]="user.contact" required pattern="[6-9][0-9]{9}"
+            #contact="ngModel" />
+          <div *ngIf="contact.invalid && contact.touched" class="error">
+            Contact is required and must be a 10-digit number starting with 6-9
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true" nzFor="gender">Gender</nz-form-label>
+        <nz-form-control>
+          <nz-select name="gender" id="gender" [(ngModel)]="user.gender" required #gender="ngModel"
+            nzPlaceHolder="Select Gender">
+            <nz-option nzValue="male" nzLabel="Male"></nz-option>
+            <nz-option nzValue="female" nzLabel="Female"></nz-option>
+            <nz-option nzValue="other" nzLabel="Other"></nz-option>
+            <nz-option nzValue="prefer_not_to_say" nzLabel="Prefer Not to Say"></nz-option>
+          </nz-select>
+          <div *ngIf="gender.invalid && gender.touched" class="error">Gender is required</div>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
