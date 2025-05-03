@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import Mailgen from 'mailgen';
 import { ConfigService } from '@nestjs/config';
-import { DatabaseHelpers } from '../common/database-helper/db-helpers';
+import { DatabaseHelpers } from '../../common/database-helper/db-helpers';
 import { OTP } from './entities/otp.entity';
 import { Repository } from 'sequelize-typescript';
 import { InjectModel } from '@nestjs/sequelize';

@@ -12,8 +12,8 @@ export class CreateOtpDto {
   email: string;
 
   @ApiProperty({
-    example: 'authentication | password reset ',
-    description: 'Otp Purpose',
+    example: 'authentication',
+    description: 'Otp Type',
     required: true
   })
   @IsNotEmpty()
@@ -38,6 +38,15 @@ export class VerifyCodeDto {
   @IsString()
   @IsNotEmpty()
   code: string;
+
+  @ApiProperty({
+    example: 'authentication',
+    description: 'OTP type',
+    required: true
+  })
+  @IsString()
+  otp_type: string;
+
 }
 
 export class VerificationResponseDto {
