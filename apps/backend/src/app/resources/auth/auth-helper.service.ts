@@ -14,7 +14,7 @@ export class HttpHelperService {
   async checkUserExists(body: checkUserWithEmailDto) {
     const checkUser = await this.dbHelperService.fnGet(User,{email: body.email});
     if (checkUser && checkUser.length > 0) {
-      return { available: false };
+      return { isUserExists: true, userName: checkUser[0]?.username, contact: checkUser[0]?.contact, role: checkUser[0]?.role, id: checkUser[0]?.id };
     }
     return { available: true };
   }

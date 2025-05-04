@@ -17,7 +17,7 @@ import { ApiBadRequestResponse, ApiBody } from '@nestjs/swagger';
 export class AuthHelperController {
   constructor(private readonly HttpHelperService: HttpHelperService) {}
 
-  @Post('')
+  @Post('user-details')
   create(@Body() createAuthHelperDto: CreateUserDto) {
     return this.HttpHelperService.create(createAuthHelperDto);
   }

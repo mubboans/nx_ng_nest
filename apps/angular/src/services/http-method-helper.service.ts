@@ -13,7 +13,7 @@ export class HttpHelperService {
   fnApiPost(url: string, payload: Record<string, any>) {
     return this.http.post(url, payload).pipe(
       map((response: any) => {
-        return response.available;
+        return response;
       }),
       catchError((error) => {
         console.error('Error checking user availability:', error);

@@ -10,6 +10,7 @@ import {
   FileOutline,
   EditOutline,
   PlusCircleOutline,
+  ArrowLeftOutline,
 } from '@ant-design/icons-angular/icons';
 
 export const ICONS: IconDefinition[] = [
@@ -21,5 +22,6 @@ export const ICONS: IconDefinition[] = [
   TeamOutline,
   FileOutline,
   EditOutline,
-  PlusCircleOutline
+  PlusCircleOutline,
+  ArrowLeftOutline
 ];
