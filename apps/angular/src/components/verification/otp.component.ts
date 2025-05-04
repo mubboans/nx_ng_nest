@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzFlexDirective } from 'ng-zorro-antd/flex';
 import { NzInputOtpComponent } from 'ng-zorro-antd/input';
@@ -8,9 +8,12 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { Store } from '@ngrx/store';
 import { selectUser } from '../../store/store-selectors';
-import { updateToken } from '../../store/store-actions';
+import { updateUser } from '../../store/store-actions';
 import { CategoryComponent } from "../category/category.component";
-
+import { HttpHelperService } from '../../services/http-method-helper.service';
+import { API_URL, OTP_TYPE } from '../../contants/api_contants';
+import { IUser } from '../../interfaces/user';
+import e from 'express';
 @Component({
   selector: 'app-otp',
   imports: [CommonModule, NzFlexDirective, NzInputOtpComponent, FormsModule, NzButtonModule, NzAlertModule, CategoryComponent],
@@ -29,7 +32,9 @@ export class OtpComponent {
   errorMessage = 'Invalid verification code. Please try again.';
   resendDisabled = false;
   resendCountdown = 0;
+  public user:IUser = {};
   private resendTimer: any;
+  private httpService = inject(HttpHelperService);
 
   constructor(private store: Store) {}
   ngOnInit(): void {
@@ -37,11 +42,11 @@ export class OtpComponent {
     this.getStoreData();
   }
   getStoreData() {
-    this.store.select(selectUser).subscribe((state) => {
-      console.log(state,' Check state');
-      if (state) {
-        this.emailOrPhone = state?.email || state?.name || '';
+    this.store.select(selectUser).subscribe((user) => {
+      if (user) {
+        this.emailOrPhone = user?.email || user?.username || '';
         this.emailOrPhone = this.maskEmailOrPhone(this.emailOrPhone);
+        this.user = user;
       }
     });
   }
@@ -63,20 +68,17 @@ export class OtpComponent {
     if (this.isOtpValid()) {
       this.isVerifying = true;
       this.showError = false;
-
-      // Emit the verification event with the OTP value
-      // this.verify.emit(this.otpValue);
-
-      // This would be replaced with actual verification logic in a real app
-      // For demo purposes, we simulate a network request
-      setTimeout(() => {
-        this.isVerifying = false;
-
-        // In a real application, this would come from your API response
-        // For demonstration, we're mocking a failed verification
-        this.showError = true;
-        this.store.dispatch(updateToken({token: Math.ceil(Math.random() * 100).toString()}));
-      }, 1500);
+      this.httpService.fnApiPost(API_URL.auth.verifyOtp, { email: this.user.email, otp: this.otpValue, type: OTP_TYPE.authentication }).subscribe((res) => {
+        if (res.success) {
+          this.isVerifying = false;
+          this.store.dispatch(updateUser({ authToken: res.data?.authToken }));
+        }
+        else {
+          this.isVerifying = false;
+          this.showError = true;
+          this.errorMessage = res.message || 'Invalid verification code. Please try again.';
+        }
+      });
     }
   }
 

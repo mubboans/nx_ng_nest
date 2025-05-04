@@ -9,10 +9,7 @@ import { ICONS } from '../contants/icons';
 import { provideStore } from '@ngrx/store';
 import { storeReducer } from '../store/store-reducers';
 import { provideNzI18n, en_US } from 'ng-zorro-antd/i18n';
-import { LOCALE_ID, importProvidersFrom } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
-import en from '@angular/common/locales/en';
-
+import { LOCALE_ID } from '@angular/core';
 
 
 export const appConfig: ApplicationConfig = {

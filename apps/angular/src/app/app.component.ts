@@ -18,8 +18,8 @@ export class AppComponent implements OnInit {
   showSidebar = false;
   ngOnInit(): void {
     this.store.select(selectUser).subscribe((state) => {
-      console.log(!!state?.token, 'Check isLoggedIn state');
-      this.showSidebar = !!state?.token ;
+      console.log(!!state?.authToken, 'Check isLoggedIn state');
+      this.showSidebar = !!state?.authToken ;
     });
   }
 }

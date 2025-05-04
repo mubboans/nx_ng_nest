@@ -1,12 +1,9 @@
 import { createReducer, on } from "@ngrx/store";
-import { clearUser, setUser, updateToken } from "./store-actions";
+import { clearUser, setUser, updateUser } from "./store-actions";
+import { IUser } from "../interfaces/user";
 
 export interface IStoreObj {
-  user: {
-    name: string;
-    email: string;
-    token?: string | null;
-  } | null;
+  user: IUser | null;
   // Add other properties as needed
 }
 
@@ -27,9 +24,9 @@ export const storeReducer = createReducer(
     localStorage.removeItem('user');
     return { ...state, user: null };
   }),
-  on(updateToken, (state, { token }) => {
+  on(updateUser, (state, user) => {
     if (!state.user) return state;
-    const updatedUser = { ...state.user, token };
+    const updatedUser = { ...state.user, user };
     localStorage.setItem('user', JSON.stringify(updatedUser));
     return { ...state, user: updatedUser };
   })
