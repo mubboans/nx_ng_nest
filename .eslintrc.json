@@ -1,0 +1,19 @@
+{
+  "extends": ["plugin:@nx/typescript"],
+  "rules": {
+    "@nx/enforce-module-boundaries": [
+      "error",
+      {
+        "enforceBuildableLibDependency": true,
+        "allow": ["^.*/eslint(\\.base)?\\.config\\.[cm]?js$"],
+        "depConstraints": [
+          {
+            "sourceTag": "*",
+            "onlyDependOnLibsWithTags": ["*"]
+          }
+        ]
+      }
+    ]
+  },
+  "ignorePatterns": ["**/node_modules/**", "**/dist/**"]
+}

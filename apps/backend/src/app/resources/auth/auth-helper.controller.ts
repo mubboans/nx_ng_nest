@@ -11,18 +11,22 @@ import { HttpHelperService } from './auth-helper.service';
 import { checkUserWithEmailDto, CreateUserDto } from './dto/create-auth-helper.dto';
 import { UpdateAuthHelperDto } from './dto/update-auth-helper.dto';
 import { returnResponse } from '../../utils/success-response';
-import { ApiBadRequestResponse, ApiBody } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBody, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+@ApiTags('Auth Helper')
 @Controller('auth')
 export class AuthHelperController {
   constructor(private readonly HttpHelperService: HttpHelperService) {}
 
   @Post('user-details')
+  @ApiOperation({ summary: 'Create or check user details' })
+  @ApiResponse({ status: 201, description: 'User created successfully' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
   create(@Body() createAuthHelperDto: CreateUserDto) {
     return this.HttpHelperService.create(createAuthHelperDto);
   }
 
-  @Post('checkUserExists')
+  @Post('check-user-exists')
   @ApiBody({ type: checkUserWithEmailDto })
   @ApiBadRequestResponse({ description: 'Invalid email format or type' })
   async findAll(@Body() body: checkUserWithEmailDto) {

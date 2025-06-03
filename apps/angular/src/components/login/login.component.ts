@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSegmentedModule } from 'ng-zorro-antd/segmented';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -6,7 +6,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { setUser } from '../../store/store-actions';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { HttpHelperService } from '../../services/http-method-helper.service';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { IUser } from '../../interfaces/user';
@@ -18,7 +18,8 @@ import {
   OTP_TYPE,
 } from '../../contants/api_contants';
 import { CommonModule } from '@angular/common';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { ToastMessagingService } from '../../services/toast-messaging.service';
+
 @Component({
   selector: 'app-login',
   imports: [
@@ -38,24 +39,22 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class LoginComponent {
+  @ViewChild('userForm') userForm!: NgForm;
   isLoading = false;
   public router = inject(Router);
   public httpService = inject(HttpHelperService);
+  public toastMessagingService = inject(ToastMessagingService);
   public isVisibleMiddle = false;
   public user: IUser = {};
+  public isModalBtnDisabled = true;
 
-  constructor(private store: Store, private message: NzMessageService) {}
+  constructor(private store: Store) {}
 
   public submit(): void {
     this.isLoading = true;
-
-    setTimeout(() => {
-      this.isLoading = false;
       this.httpService
         .fnApiPost(API_URL.auth.checkuser, { email: this.user.email })
         .subscribe((res) => {
-          console.log(res, 'Check user response');
-
           if (res?.success === CONSTANT_VARIABLE.SUCCESS_API_RESPONSE) {
             if (res.data.isUserExists) {
               this.sendEmailOtp();
@@ -69,52 +68,35 @@ export class LoginComponent {
                 })
               );
             } else {
-              this.message.info('It seems you are a new user, please enter detail first.', { nzDuration: 2500 }).onClose!.subscribe(() => {
-                this.isVisibleMiddle = true;
-              });
-              // this.isVisibleMiddle = true;
+              this.toastMessagingService.info('It seems you are a new user, please enter detail first.');
+              this.isVisibleMiddle = true;
             }
           }
           this.isLoading = false;
-        });
-    }, 1000);
+      });
   }
 
   public handleCancelMiddle(): void {
-    this.isVisibleMiddle = false;
+    this.hideModal();
+    this.userForm.resetForm();
   }
 
   public handleOkMiddle(): void {
-    const loadingMsgID = this.message.loading('Adding Data, Please Wait...', {
-      nzDuration: 1000,
-    }).messageId;
+    this.toastMessagingService.loading('Adding Data, Please Wait...');
 
     this.httpService
       .fnApiPost(API_URL.auth.userDetails, this.user)
-      .subscribe((data) => {
-        if (data.success) {
-          this.isVisibleMiddle = false;
-          this.message.remove(loadingMsgID);
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          this.message
-            .success('Data added successfully!', { nzDuration: 2500 })
-            .onClose!.subscribe(() => {
-              this.sendEmailOtp();
-              this.router.navigate(['/otp']);
-              this.hideModal();
-            });
+      .subscribe((res) => {
+        if (res.success) {
+          this.toastMessagingService.success('Data added successfully!');
+          this.sendEmailOtp();
+          this.router.navigate(['/otp']);
+          this.hideModal();
         } else {
-          this.message.remove(loadingMsgID);
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          this.message
-            .error('Error while adding data!', { nzDuration: 2500 })
-            .onClose!.subscribe(() => {
-              this.hideModal();
-              this.isVisibleMiddle = false;
-            });
+          this.toastMessagingService.error(res?.error?.errors[0]?.message || 'Error while adding data!');
+          this.hideModal();
         }
       });
-    this.isVisibleMiddle = false;
   }
 
   public hideModal(): void {
@@ -129,19 +111,21 @@ export class LoginComponent {
       })
       .subscribe((data) => {
         if (data.success === CONSTANT_VARIABLE.SUCCESS_API_RESPONSE) {
-          this.message.success(data.message, { nzDuration: 2500 });
+          this.toastMessagingService.success(data.message);
         } else {
-          this.message.error(data.message, { nzDuration: 2500 });
+          this.toastMessagingService.error(data.message);
         }
       });
   }
 
-  get isModalBtnDisabled(): boolean {
-    return this.user.email &&
-      this.user.username &&
-      this.user.contact &&
-      this.user.gender
-      ? false
-      : true;
+  checkFormValidity(): void {
+    if (this.userForm) {
+      const isValid =
+        this.user.username?.trim() &&
+        this.user.contact?.match(/^[6-9][0-9]{9}$/) &&
+        this.user.gender;
+
+      this.isModalBtnDisabled = !isValid;
+    }
   }
 }

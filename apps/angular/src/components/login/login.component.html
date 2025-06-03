@@ -49,7 +49,8 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" nzFor="username">Username</nz-form-label>
         <nz-form-control>
-          <input nz-input name="username" id="username" [(ngModel)]="user.username" required #username="ngModel" />
+          <input nz-input name="username" id="username" [(ngModel)]="user.username" required #username="ngModel"
+            (ngModelChange)="checkFormValidity()" />
           @if (username.invalid && username.touched) {
             <div class="text-red-500">Username is required</div>
           }
@@ -70,7 +71,7 @@
         <nz-form-label [nzRequired]="true" nzFor="contact">Contact</nz-form-label>
         <nz-form-control >
           <input nz-input name="contact" id="contact" [(ngModel)]="user.contact" required pattern="[6-9][0-9]{9}"
-            #contact="ngModel" />
+            #contact="ngModel" (ngModelChange)="checkFormValidity()" />
             @if (contact.invalid && contact.touched) {
               <div class="text-red-500">
                 Contact is required and must be a 10-digit number starting with 6-9
@@ -83,7 +84,7 @@
         <nz-form-label [nzRequired]="true" nzFor="gender">Gender</nz-form-label>
         <nz-form-control>
           <nz-select name="gender" id="gender" [(ngModel)]="user.gender" required #gender="ngModel"
-            nzPlaceHolder="Select Gender">
+            nzPlaceHolder="Select Gender" (ngModelChange)="checkFormValidity()">
             <nz-option nzValue="male" nzLabel="Male"></nz-option>
             <nz-option nzValue="female" nzLabel="Female"></nz-option>
             <nz-option nzValue="other" nzLabel="Other"></nz-option>

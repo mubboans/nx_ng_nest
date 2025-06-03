@@ -12,7 +12,7 @@ export const API_URL = {
     register: API_ENDPOINTS.auth('register'),
     sendOtp: API_ENDPOINTS.otp('send-otp'),
     logout: API_ENDPOINTS.auth('logout'),
-    checkuser: API_ENDPOINTS.auth('checkUserExists'),
+    checkuser: API_ENDPOINTS.auth('check-user-exists'),
     forgotPassword: API_ENDPOINTS.auth('forgot-password'),
     userDetails: API_ENDPOINTS.auth('user-details'),
     verifyOtp: API_ENDPOINTS.otp('verify-otp'),

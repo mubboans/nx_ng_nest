@@ -7,8 +7,12 @@ import { User } from '../user/entities/user.entity';
 @Injectable()
 export class HttpHelperService {
   constructor(private dbHelperService: DatabaseHelpers) {}
-  create(createAuthHelperDto: CreateUserDto) {
-    return 'This action adds a new authHelper';
+  async create(createAuthHelperDto: CreateUserDto) {
+    const user = await this.dbHelperService.fnGet(User, {email: createAuthHelperDto.email});
+    if (user && user.length > 0) {
+      return { isUserExists: true, userName: user[0]?.username, contact: user[0]?.contact, role: user[0]?.role, id: user[0]?.id };
+    }
+    return this.dbHelperService.fnPost(User, createAuthHelperDto);
   }
 
   async checkUserExists(body: checkUserWithEmailDto) {
@@ -16,7 +20,7 @@ export class HttpHelperService {
     if (checkUser && checkUser.length > 0) {
       return { isUserExists: true, userName: checkUser[0]?.username, contact: checkUser[0]?.contact, role: checkUser[0]?.role, id: checkUser[0]?.id };
     }
-    return { available: true };
+    return { available: false };
   }
 
   findOne(id: number) {
