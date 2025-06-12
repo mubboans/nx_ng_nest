@@ -60,20 +60,25 @@ export class LoginComponent {
               this.sendEmailOtp();
               this.store.dispatch(
                 setUser({
-                  id: res.data.id,
-                  username: res.data.userName,
-                  email: this.user.email,
-                  role: res.data.role,
-                  contact: res.data.contact,
+                  id: res?.data?.id,
+                  username: res?.data?.userName,
+                  email: res?.data?.email,
+                  role: res?.data?.role,
+                  contact: res?.data?.contact,
                 })
               );
             } else {
               this.toastMessagingService.info('It seems you are a new user, please enter detail first.');
               this.isVisibleMiddle = true;
+              this.isLoading = false;
             }
           }
-          this.isLoading = false;
-      });
+      },
+      (error) => {
+        this.toastMessagingService.error(error?.error?.message);
+        this.isLoading = false;
+      }
+    );
   }
 
   public handleCancelMiddle(): void {
@@ -83,15 +88,21 @@ export class LoginComponent {
 
   public handleOkMiddle(): void {
     this.toastMessagingService.loading('Adding Data, Please Wait...');
-
     this.httpService
       .fnApiPost(API_URL.auth.userDetails, this.user)
       .subscribe((res) => {
         if (res.success) {
           this.toastMessagingService.success('Data added successfully!');
           this.sendEmailOtp();
-          this.router.navigate(['/otp']);
-          this.hideModal();
+          this.store.dispatch(
+            setUser({
+              id: res?.data?.id,
+              username: res?.data?.userName,
+              email: res?.data?.email,
+              role: res?.data?.role,
+              contact: res?.data?.contact,
+            })
+          );
         } else {
           this.toastMessagingService.error(res?.error?.errors[0]?.message || 'Error while adding data!');
           this.hideModal();
@@ -107,14 +118,18 @@ export class LoginComponent {
     this.httpService
       .fnApiPost(API_URL.auth.sendOtp, {
         email: this.user.email,
-        type: OTP_TYPE.authentication,
+        otp_type: OTP_TYPE.authentication,
       })
       .subscribe((data) => {
-        if (data.success === CONSTANT_VARIABLE.SUCCESS_API_RESPONSE) {
-          this.toastMessagingService.success(data.message);
+        console.log(data, 'data');
+        if (data?.success === CONSTANT_VARIABLE.SUCCESS_API_RESPONSE) {
+          this.toastMessagingService.success(data?.message);
+          this.router.navigate(['/otp']);
         } else {
-          this.toastMessagingService.error(data.message);
+          this.toastMessagingService.error(data?.message);
         }
+        this.hideModal();
+        this.isLoading = false;
       });
   }
 
@@ -124,7 +139,6 @@ export class LoginComponent {
         this.user.username?.trim() &&
         this.user.contact?.match(/^[6-9][0-9]{9}$/) &&
         this.user.gender;
-
       this.isModalBtnDisabled = !isValid;
     }
   }

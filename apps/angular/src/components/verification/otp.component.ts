@@ -14,9 +14,12 @@ import { HttpHelperService } from '../../services/http-method-helper.service';
 import { API_URL, OTP_TYPE } from '../../contants/api_contants';
 import { IUser } from '../../interfaces/user';
 import e from 'express';
+import { Router } from '@angular/router';
+import { DashboardComponent } from "../dashboard/dashboard.component";
+
 @Component({
   selector: 'app-otp',
-  imports: [CommonModule, NzFlexDirective, NzInputOtpComponent, FormsModule, NzButtonModule, NzAlertModule, CategoryComponent],
+  imports: [CommonModule, NzFlexDirective, NzInputOtpComponent, FormsModule, NzButtonModule, NzAlertModule, CategoryComponent, DashboardComponent],
   templateUrl: './otp.component.html',
   styleUrl: './otp.component.scss',
 })
@@ -36,7 +39,10 @@ export class OtpComponent {
   private resendTimer: any;
   private httpService = inject(HttpHelperService);
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private router: Router
+  ) {}
   ngOnInit(): void {
     this.startResendTimer();
     this.getStoreData();
@@ -53,10 +59,7 @@ export class OtpComponent {
 
   onOtpChange(value: string): void {
     if (value.length === this.otpLength) {
-      // Auto-submit if all digits are filled
-      setTimeout(() => {
-        this.verifyOtp();
-      }, 300);
+      this.verifyOtp();
     }
   }
 
@@ -72,6 +75,7 @@ export class OtpComponent {
         if (res.success) {
           this.isVerifying = false;
           this.store.dispatch(updateUser({ authToken: res.data?.authToken }));
+          this.router.navigate(['/dashboard']);
         }
         else {
           this.isVerifying = false;

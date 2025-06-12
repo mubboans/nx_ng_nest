@@ -20,7 +20,7 @@ export class HttpHelperService {
     if (checkUser && checkUser.length > 0) {
       return { isUserExists: true, userName: checkUser[0]?.username, contact: checkUser[0]?.contact, role: checkUser[0]?.role, id: checkUser[0]?.id };
     }
-    return { available: false };
+    return { isUserExists: false };
   }
 
   findOne(id: number) {

@@ -17,7 +17,7 @@ export class HttpHelperService {
       }),
       catchError((error) => {
         console.error('Error checking user availability:', error);
-        return of(false);
+        return of(error);
       })
     );
   }
@@ -29,7 +29,7 @@ export class HttpHelperService {
       }),
       catchError((error) => {
         console.error('Error checking user availability:', error);
-        return of(false);
+        return of(error);
       })
     );
   }
@@ -41,7 +41,7 @@ export class HttpHelperService {
       }),
       catchError((error) => {
         console.error('Error checking user availability:', error);
-        return of(false);
+        return of(error);
       })
     );
   }
@@ -53,7 +53,7 @@ export class HttpHelperService {
       }),
       catchError((error) => {
         console.error('Error checking user availability:', error);
-        return of(false);
+        return of(error);
       })
     );
   }

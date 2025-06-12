@@ -1,1 +1,61 @@
-<p>dashboard works!</p>
+<div class="flex flex-col md:flex-row h-full">
+  <!-- Sidebar: Task List -->
+  <div class="w-full md:w-1/4 bg-gray-100 p-4">
+    <h3 class="font-bold mb-4">All Tasks</h3>
+    <ul
+      cdkDropList
+      [cdkDropListData]="allTasks"
+      [cdkDropListConnectedTo]="columnDropListIds"
+      id="allTasksList"
+      class="bg-white rounded shadow"
+      (cdkDropListDropped)="drop($event, -1)"
+    >
+      <li
+        *ngFor="let task of allTasks"
+        cdkDrag
+        class="mb-2 p-2 bg-white rounded shadow"
+      >
+        {{ task.title }}
+      </li>
+    </ul>
+  </div>
+
+  <!-- Kanban Board -->
+  <div class="flex-1 flex flex-col md:flex-row gap-4 p-4 overflow-x-auto">
+    <div
+      *ngFor="let column of columns; let colIdx = index"
+      class="w-full md:w-1/3 bg-gray-50 rounded shadow p-2 flex flex-col"
+    >
+      <div class="flex justify-between items-center mb-2">
+        <span class="font-semibold">{{ column.name }}</span>
+        <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+          Actions
+          <nz-icon nzType="down" />
+        </a>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item>Add Task</li>
+            <li nz-menu-item>Edit Column</li>
+            <li nz-menu-item>Delete Column</li>
+          </ul>
+        </nz-dropdown-menu>
+      </div>
+      <div
+        cdkDropList
+        [cdkDropListData]="column.tasks"
+        [cdkDropListConnectedTo]="getConnectedDropListIds(colIdx)"
+        [id]="'col' + colIdx"
+        class="flex-1 min-h-[100px] p-2"
+        (cdkDropListDropped)="drop($event, colIdx)"
+      >
+        <div
+          *ngFor="let task of column.tasks"
+          cdkDrag
+          class="mb-2 p-2 bg-gray-50 rounded shadow bg-white"
+        >
+          {{ task.title }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

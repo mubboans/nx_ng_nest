@@ -23,7 +23,7 @@ export class AuthHelperController {
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   create(@Body() createAuthHelperDto: CreateUserDto) {
-    return this.HttpHelperService.create(createAuthHelperDto);
+    return returnResponse(201, 'User created successfully', this.HttpHelperService.create(createAuthHelperDto));
   }
 
   @Post('check-user-exists')
