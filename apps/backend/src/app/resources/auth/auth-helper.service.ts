@@ -10,7 +10,7 @@ export class HttpHelperService {
   async create(createAuthHelperDto: CreateUserDto) {
     const user = await this.dbHelperService.fnGet(User, {email: createAuthHelperDto.email});
     if (user && user.length > 0) {
-      return { isUserExists: true, userName: user[0]?.username, contact: user[0]?.contact, role: user[0]?.role, id: user[0]?.id };
+      return { isUserExists: true, userName: user[0]?.username, contact: user[0]?.contact, role: user[0]?.role, id: user[0]?.id, email: user[0]?.email };
     }
     return this.dbHelperService.fnPost(User, createAuthHelperDto);
   }

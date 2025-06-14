@@ -15,7 +15,7 @@ export const API_URL = {
     checkuser: API_ENDPOINTS.auth('check-user-exists'),
     forgotPassword: API_ENDPOINTS.auth('forgot-password'),
     userDetails: API_ENDPOINTS.auth('user-details'),
-    verifyOtp: API_ENDPOINTS.otp('verify-otp'),
+    verifyOtp: API_ENDPOINTS.otp('verify-code'),
   },
 };
 

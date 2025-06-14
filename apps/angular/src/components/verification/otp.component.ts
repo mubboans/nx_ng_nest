@@ -49,6 +49,7 @@ export class OtpComponent {
   }
   getStoreData() {
     this.store.select(selectUser).subscribe((user) => {
+      console.log('user from store', user);
       if (user) {
         this.emailOrPhone = user?.email || user?.username || '';
         this.emailOrPhone = this.maskEmailOrPhone(this.emailOrPhone);
@@ -71,7 +72,7 @@ export class OtpComponent {
     if (this.isOtpValid()) {
       this.isVerifying = true;
       this.showError = false;
-      this.httpService.fnApiPost(API_URL.auth.verifyOtp, { email: this.user.email, otp: this.otpValue, type: OTP_TYPE.authentication }).subscribe((res) => {
+      this.httpService.fnApiPost(API_URL.auth.verifyOtp, { email: this.user.email, code: this.otpValue, otp_type: OTP_TYPE.authentication }).subscribe((res) => {
         if (res.success) {
           this.isVerifying = false;
           this.store.dispatch(updateUser({ authToken: res.data?.authToken }));

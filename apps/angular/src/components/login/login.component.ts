@@ -62,7 +62,7 @@ export class LoginComponent {
                 setUser({
                   id: res?.data?.id,
                   username: res?.data?.userName,
-                  email: res?.data?.email,
+                  email: res?.data?.email || this.user.email,
                   role: res?.data?.role,
                   contact: res?.data?.contact,
                 })
@@ -92,6 +92,7 @@ export class LoginComponent {
       .fnApiPost(API_URL.auth.userDetails, this.user)
       .subscribe((res) => {
         if (res.success) {
+
           this.toastMessagingService.success('Data added successfully!');
           this.sendEmailOtp();
           this.store.dispatch(
