@@ -4,13 +4,12 @@ import Mailgen from 'mailgen';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseHelpers } from '../../common/database-helper/db-helpers';
 import { OTP } from './entities/otp.entity';
-import { Repository } from 'sequelize-typescript';
-import { InjectModel } from '@nestjs/sequelize';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class OtpService {
   private mailGenerator: Mailgen;
-  private transporter: nodemailer.Transporter;
+
 
   constructor(
     // @InjectModel(OTP)
@@ -28,10 +27,10 @@ export class OtpService {
     // this.transporter = nodemailer.createTransport({
 
     // });
-    console.log(this.configService.get<string>('MAIL_HOST'),"this.configService.get<string>('MAIL_HOST')");
+    console.log(this.configService.get<string>('MAIL_HOST'), "this.configService.get<string>('MAIL_HOST')");
   }
 
-  emailTransport(){
+  emailTransport() {
     const transport = nodemailer.createTransport({
       host: this.configService.get<string>('MAIL_HOST'),
       port: this.configService.get<number>('MAIL_PORT'),
@@ -55,27 +54,27 @@ export class OtpService {
     try {
       const otp = this.generateCode();
       const otpCheck = await this.dbHelperService.fnGet(OTP, { email: obj?.to, otp_type: obj?.otp_type });
-      if (otpCheck.length > 0 ) {
+      if (otpCheck.length > 0) {
         // if (!otpRecord) {
-          //   throw new Error('Failed to update OTP');
-          // }
-       const updateOj = {
-         expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-         isVerified: false,
-         otp: otp,
-       }
-        if(new Date(otpCheck[0]?.lastAttempt) > new Date()){
+        //   throw new Error('Failed to update OTP');
+        // }
+        const updateOj = {
+          expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+          isVerified: false,
+          otp: otp,
+        }
+        if (new Date(otpCheck[0]?.lastAttempt) > new Date()) {
           throw new HttpException('You have already requested an OTP, please wait for a while', 400);
         }
         if (otpCheck[0]?.attemptCount > 3) {
           updateOj['attemptCount'] = 0;
         }
-          await this.dbHelperService.fnUpdate(OTP, updateOj, { email: obj?.to, otp_type: obj?.otp_type });
+        await this.dbHelperService.fnUpdate(OTP, updateOj, { email: obj?.to, otp_type: obj?.otp_type });
       }
 
       await this.dbHelperService.fnPost(OTP, { email: obj?.to, otp: otp, otp_type: obj?.otp_type, expiresAt: new Date(Date.now() + 10 * 60 * 1000) });
       await transport.sendMail(options);
-      console.log('Email sent successfully:', otpCheck,'also check the otp data');
+      console.log('Email sent successfully:', otpCheck, 'also check the otp data');
       return {
         success: true,
         message: 'Email sent successfully',
@@ -90,12 +89,18 @@ export class OtpService {
     }
   }
 
-  checkUser(email: string): boolean {
-
-    return true;
+  async checkUser(email: string) {
+    try {
+      const user = await this.dbHelperService.fnGet(User, { email });
+      console.log(user, 'user');
+      return user.length > 0;
+    } catch (error) {
+      console.log('Error checking user:', error);
+      throw new HttpException('Failed to check user', 500);
+    }
   }
 
-  verifyCode(email: string, code: string): boolean {
+  async verifyCode(email: string, code: string) {
     // Verify the code against the database
     // For demonstration, let's assume the code is valid
     // In a real application, you would check the code against the database

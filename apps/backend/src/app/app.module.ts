@@ -10,28 +10,34 @@ import { OTP } from './resources/otp/entities/otp.entity';
 import { UserModule } from './resources/user/user.module';
 import { ContentModule } from './resources/content/content.module';
 import { User } from './resources/user/entities/user.entity';
+import { AdminAuthModule } from './resources/admin-auth/admin-auth.module';
+import { CarModelModule } from './resources/car-model/car-model.module';
+import { CarModel } from './resources/car-model/entities/car-model.entity';
+
 @Module({
   imports: [
     AuthHelperModule,
     OtpModule,
+    AdminAuthModule,
+    CarModelModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     SequelizeModule.forRootAsync({
-      inject: [ConfigService], // ✅ MUST inject the ConfigService
+      inject: [ConfigService],
       useFactory: async (
         config: ConfigService
       ): Promise<SequelizeModuleOptions> => ({
         dialect: 'mysql',
         host: config.get<string>('DB_HOST'),
-        port: Number(config.get<string>('DB_PORT')), // make sure port is number
-        username: config.get<string>('DB_USER'), // correct key here
+        port: Number(config.get<string>('DB_PORT')),
+        username: config.get<string>('DB_USER'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
         autoLoadModels: true,
         synchronize: true,
-        models: [OTP, User], // add your models here
-        logging: false, // optional: turn off SQL logs
+        models: [OTP, User, CarModel],
+        logging: false,
       }),
     }),
     CommonModule,

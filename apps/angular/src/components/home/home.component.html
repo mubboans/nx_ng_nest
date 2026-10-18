@@ -1,0 +1,521 @@
+<div class="min-h-screen bg-[#eaecf0] py-3 sm:py-6 px-2 sm:px-4 lg:px-8 flex items-center justify-center">
+    <!-- Flagship Neo-Brutalist Frame Container -->
+    <main
+        class="w-full max-w-[1440px] bg-white border-2 sm:border-3 border-black rounded-2xl sm:rounded-3xl lg:rounded-[36px] p-3 sm:p-5 lg:p-7 shadow-[5px_5px_0px_#0d0f12] sm:shadow-[8px_8px_0px_#0d0f12] lg:shadow-[14px_14px_0px_#0d0f12] flex flex-col gap-4 sm:gap-6 relative overflow-hidden">
+
+        <!-- ======================================================== -->
+        <!-- NAVIGATION BAR (TOP BANNER)                              -->
+        <!-- ======================================================== -->
+        <header
+            class="w-full bg-[#fde8d7] border-2 border-black rounded-xl sm:rounded-2xl p-2.5 sm:p-4 shadow-[3px_3px_0px_#0d0f12] sm:shadow-[4px_4px_0px_#0d0f12] flex flex-wrap items-center justify-between gap-2.5 sm:gap-4 relative z-30">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a routerLink="/" class="flex items-center gap-2 group text-decoration-none">
+                    <div
+                        class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-black text-white flex items-center justify-center font-black text-xs sm:text-sm tracking-tighter border border-black group-hover:bg-[#ffc4c4] group-hover:text-black transition-colors">
+                        DX
+                    </div>
+                    <span class="font-display font-black text-lg sm:text-xl tracking-tight text-black">M.D.X•LAB</span>
+                    <span
+                        class="hidden md:inline-block px-2 py-0.5 bg-black text-[#d1fae5] text-[10px] font-mono-tech uppercase font-bold rounded">
+                        HYPER MOTORS
+                    </span>
+                </a>
+            </div>
+
+            <!-- Navigation Links (Desktop) -->
+            <nav
+                class="hidden lg:flex items-center space-x-6 text-xs uppercase font-mono-tech font-bold tracking-wider">
+                <a href="#about"
+                    class="text-black hover:text-[#2563eb] hover:underline transition-colors text-decoration-none">About
+                    Project</a>
+                <a href="#overview"
+                    class="text-black hover:text-[#2563eb] hover:underline transition-colors text-decoration-none">Overview</a>
+                <a routerLink="/models"
+                    class="text-black hover:text-[#2563eb] hover:underline transition-colors text-decoration-none">Lineup</a>
+                <a (click)="openArticleDrawer()"
+                    class="text-black hover:text-[#2563eb] hover:underline transition-colors cursor-pointer text-decoration-none">Powertrain</a>
+                <a (click)="openTestDriveModal(1)"
+                    class="text-black hover:text-[#2563eb] hover:underline transition-colors cursor-pointer text-decoration-none">Test
+                    Drive</a>
+            </nav>
+
+            <!-- Action Buttons (Responsive on Mobile & Desktop) -->
+            <div class="flex items-center gap-1.5 sm:gap-3">
+                <!-- Admin CMS Link (Desktop/Tablet) -->
+                <a routerLink="/dashboard" nz-tooltip="Open Admin CMS Dashboard"
+                    class="hidden sm:flex px-2.5 sm:px-3 py-1.5 bg-white text-black text-[11px] sm:text-xs font-mono-tech font-bold uppercase rounded-lg border-2 border-black shadow-[2px_2px_0px_#000] hover:bg-[#cffafe] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all items-center gap-1.5 cursor-pointer text-decoration-none">
+                    <nz-icon nzType="dashboard" />
+                    <span>Admin CMS</span>
+                </a>
+
+                <!-- QR Code Trigger -->
+                <button type="button" (click)="openQrModal()" nz-tooltip="Scan QR Code to open on Mobile"
+                    class="px-2.5 sm:px-3 py-1.5 bg-white text-black text-[11px] sm:text-xs font-mono-tech font-bold uppercase rounded-lg border-2 border-black shadow-[2px_2px_0px_#000] hover:bg-[#fef08a] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all flex items-center gap-1 cursor-pointer">
+                    <nz-icon nzType="qrcode" />
+                    <span class="hidden sm:inline">Scan QR</span>
+                </button>
+
+                <!-- Get Started / Preorder CTA -->
+                <button type="button" (click)="openTestDriveModal(1)"
+                    class="px-3 sm:px-4 py-1.5 sm:py-2 bg-black text-white text-[11px] sm:text-xs font-mono-tech font-bold uppercase rounded-lg border-2 border-black shadow-[2px_2px_0px_#000] sm:shadow-[3px_3px_0px_#000] hover:bg-[#ffc4c4] hover:text-black hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer flex items-center gap-1 sm:gap-1.5">
+                    <span>Get Started</span>
+                    <nz-icon nzType="right" class="text-[10px]" />
+                </button>
+
+                <!-- Mobile Menu Toggle Button (Visible on mobile/tablet) -->
+                <button type="button" (click)="toggleMobileMenu()"
+                    class="lg:hidden w-8 h-8 rounded-lg bg-white border-2 border-black flex items-center justify-center text-black shadow-[2px_2px_0px_#000] hover:bg-gray-100 cursor-pointer">
+                    <nz-icon [nzType]="isMobileMenuOpen ? 'close' : 'menu-unfold'" />
+                </button>
+
+                <!-- Desktop Menu Dots -->
+                <div class="hidden lg:flex items-center gap-1 pl-1">
+                    <span class="w-2 h-2 rounded-full bg-black"></span>
+                    <span class="w-2 h-2 rounded-full bg-black"></span>
+                    <span class="w-2 h-2 rounded-full bg-black"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Dropdown Navigation Drawer -->
+        @if (isMobileMenuOpen) {
+        <div
+            class="lg:hidden bg-white border-2 border-black rounded-2xl p-4 shadow-[4px_4px_0px_#000] space-y-3 animate-fadeIn z-20">
+            <div class="grid grid-cols-2 gap-2 text-xs font-mono-tech font-bold uppercase">
+                <a routerLink="/" (click)="closeMobileMenu()"
+                    class="p-2.5 bg-gray-50 border border-black rounded-lg text-black hover:bg-[#d6e4ff] text-decoration-none block text-center">
+                    Home
+                </a>
+                <a routerLink="/models" (click)="closeMobileMenu()"
+                    class="p-2.5 bg-gray-50 border border-black rounded-lg text-black hover:bg-[#d1fae5] text-decoration-none block text-center">
+                    Car Lineup
+                </a>
+                <button (click)="openArticleDrawer()"
+                    class="p-2.5 bg-gray-50 border border-black rounded-lg text-black hover:bg-[#fef08a] block text-center cursor-pointer font-bold font-mono-tech uppercase">
+                    Powertrain
+                </button>
+                <a routerLink="/dashboard" (click)="closeMobileMenu()"
+                    class="p-2.5 bg-gray-50 border border-black rounded-lg text-black hover:bg-[#cffafe] text-decoration-none block text-center">
+                    Admin CMS
+                </a>
+            </div>
+            <button type="button" (click)="openTestDriveModal(1)"
+                class="w-full py-2.5 bg-[#ffc4c4] text-black font-black text-xs font-mono-tech uppercase rounded-xl border-2 border-black shadow-[2px_2px_0px_#000] flex items-center justify-center gap-1.5 cursor-pointer">
+                <nz-icon nzType="car" />
+                <span>Book VIP Test Drive</span>
+            </button>
+        </div>
+        }
+
+        <!-- ======================================================== -->
+        <!-- BENTO GRID (RESPONSIVE: MOBILE STACK WITH OPTIMAL ORDER,  -->
+        <!-- DESKTOP 3-COLUMN LAYOUT MATCHING WIREFRAME)              -->
+        <!-- ======================================================== -->
+        <div class="flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-6 min-h-[600px]">
+
+            <!-- ==================================================== -->
+            <!-- COLUMN 1 (LEFT): TITLE + MEDIA + TEXT (Span 4 of 12)  -->
+            <!-- ==================================================== -->
+            <section class="contents lg:col-span-4 lg:flex lg:flex-col lg:justify-between lg:gap-5"
+                aria-label="Hypercar Overview">
+                <!-- 1. TITLE BOX (Order 1 on mobile, soft blue) -->
+                <article
+                    class="order-1 lg:order-none bg-[#d6e4ff] border-2 border-black rounded-2xl p-5 sm:p-7 shadow-[3px_3px_0px_#0d0f12] sm:shadow-[4px_4px_0px_#0d0f12] flex flex-col justify-center flex-1 transition-transform hover:translate-x-[-1px] hover:translate-y-[-1px]">
+                    <div class="inline-block mb-2 sm:mb-3">
+                        <span
+                            class="px-2 sm:px-2.5 py-0.5 sm:py-1 bg-black text-[#d6e4ff] text-[9px] sm:text-[10px] font-mono-tech uppercase font-bold rounded">
+                            MDX•LAB TECHNOLOGY
+                        </span>
+                    </div>
+                    <h1
+                        class="text-2xl sm:text-4xl xl:text-5xl font-black uppercase tracking-tight text-black leading-[1.08] m-0">
+                        FUTURE HYPER CAR WITH AI DYNAMICS
+                    </h1>
+                    <p
+                        class="text-[11px] sm:text-xs uppercase font-mono-tech text-slate-700 mt-2.5 sm:mt-3 font-semibold tracking-wider m-0">
+                        Series 01 • Velocity GT Architecture
+                    </p>
+                </article>
+
+                <!-- 2. MEDIA BOX (Order 4 on mobile, soft purple with Play Button) -->
+                <article
+                    class="order-4 lg:order-none bg-[#e3d2ff] border-2 border-black rounded-2xl p-4 sm:p-5 shadow-[3px_3px_0px_#0d0f12] sm:shadow-[4px_4px_0px_#0d0f12] transition-transform hover:translate-x-[-1px] hover:translate-y-[-1px]">
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <!-- Black Play Button Square (Matches visual screenshot) -->
+                        <button type="button" (click)="openMediaPreview()"
+                            nz-tooltip="Play Engine Audio Telemetry & Cockpit HUD Preview"
+                            class="w-12 h-12 sm:w-14 sm:h-14 bg-black text-white rounded-xl flex items-center justify-center border-2 border-black shadow-[2px_2px_0px_#000] sm:shadow-[3px_3px_0px_#000] hover:bg-white hover:text-black cursor-pointer transition-all flex-shrink-0 group">
+                            <nz-icon nzType="play-circle"
+                                class="text-xl sm:text-2xl group-hover:scale-110 transition-transform" />
+                        </button>
+
+                        <!-- Media Preview Image Thumbnail -->
+                        <div (click)="openMediaPreview()"
+                            class="h-12 sm:h-14 flex-1 rounded-xl border-2 border-black overflow-hidden relative cursor-pointer group shadow-[2px_2px_0px_#000]">
+                            <img src="/images/cockpit-media.jpg" alt="Cockpit HUD Telemetry"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                            <div class="absolute inset-0 bg-black/20 flex items-center justify-end pr-2">
+                                <span
+                                    class="text-[8px] sm:text-[9px] font-mono-tech font-bold text-white bg-black/80 px-1.5 py-0.5 rounded">
+                                    AUDIO &amp; HUD
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-slate-800 font-medium leading-relaxed mt-2.5 sm:mt-3 m-0">
+                        Exploring aerodynamic architecture, 0-100 km/h in 1.89s, real-time AI cornering telemetry, and
+                        sustainable electric performance.
+                    </p>
+                </article>
+
+                <!-- 3. TEXT BOX (Order 6 on mobile, soft yellow) -->
+                <article
+                    class="order-6 lg:order-none bg-[#fef08a] border-2 border-black rounded-2xl p-4 sm:p-5 shadow-[3px_3px_0px_#0d0f12] sm:shadow-[4px_4px_0px_#0d0f12] transition-transform hover:translate-x-[-1px] hover:translate-y-[-1px]">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-[10px] font-mono-tech uppercase font-bold text-black tracking-widest">
+                            NEXT-GEN CHASSIS
+                        </span>
+                        <span class="w-2 h-2 rounded-full bg-black"></span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-black font-semibold leading-relaxed m-0">
+                        Full carbon monocoque chassis integrating dual axial-flux motors with 1,420 horsepower.
+                        Engineered for closed-circuit autonomous agility and pure driver adrenaline.
+                    </p>
+                </article>
+            </section>
+
+            <!-- ==================================================== -->
+            <!-- COLUMN 2 (CENTER): HERO IMAGE (Order 2 on mobile)     -->
+            <!-- ==================================================== -->
+            <section
+                class="order-2 lg:order-none lg:col-span-5 bg-[#f0e6fc] border-2 border-black rounded-2xl p-4 sm:p-6 lg:p-8 shadow-[3px_3px_0px_#0d0f12] sm:shadow-[4px_4px_0px_#0d0f12] relative flex flex-col justify-between overflow-hidden group"
+                aria-label="APEX Velocity GT Visual">
+                <!-- Background Tech Watermark -->
+                <div
+                    class="absolute top-4 left-4 sm:top-6 sm:left-6 select-none opacity-20 pointer-events-none font-display font-black text-5xl sm:text-6xl xl:text-8xl text-black">
+                    APEX•01
+                </div>
+
+                <!-- Top Badges -->
+                <div class="relative z-10 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                    <span
+                        class="px-2.5 sm:px-3 py-0.5 sm:py-1 bg-black text-white text-[10px] sm:text-xs font-mono-tech uppercase font-bold rounded-lg border border-black shadow-[2px_2px_0px_#000]">
+                        FLAGSHIP CONCEPT 2026
+                    </span>
+                    <span
+                        class="px-2 sm:px-2.5 py-0.5 sm:py-1 bg-white text-black text-[10px] sm:text-xs font-mono-tech font-bold rounded-lg border-2 border-black shadow-[2px_2px_0px_#000]">
+                        1,420 HP • DUAL MOTOR
+                    </span>
+                </div>
+
+                <!-- Central Hypercar Hero Image Visual -->
+                <figure class="relative z-10 my-3 sm:my-5 lg:my-auto flex items-center justify-center">
+                    <div class="w-full relative">
+                        <img src="/images/hypercar-hero.jpg"
+                            alt="MDX APEX VELOCITY GT Futuristic Electric Hypercar Concept"
+                            class="w-full max-h-[240px] sm:max-h-[320px] lg:max-h-[460px] object-contain drop-shadow-[0_15px_20px_rgba(0,0,0,0.2)] sm:drop-shadow-[0_20px_25px_rgba(0,0,0,0.25)] transform group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+                            (click)="openTestDriveModal(4)" />
+                        <div
+                            class="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-3/4 h-5 sm:h-6 bg-black/15 blur-lg rounded-full pointer-events-none">
+                        </div>
+                    </div>
+                </figure>
+
+                <!-- Bottom Spec Cards & Colorway Selector -->
+                <div class="relative z-10 space-y-2.5 sm:space-y-3">
+                    <div class="grid grid-cols-3 gap-1.5 sm:gap-2 text-center font-mono-tech text-xs">
+                        <div class="p-1.5 sm:p-2 bg-white border-2 border-black rounded-lg shadow-[2px_2px_0px_#000]">
+                            <span class="text-gray-500 text-[9px] sm:text-[10px] block">0-100 KM/H</span>
+                            <strong class="text-black text-xs sm:text-sm">1.89s</strong>
+                        </div>
+                        <div class="p-1.5 sm:p-2 bg-white border-2 border-black rounded-lg shadow-[2px_2px_0px_#000]">
+                            <span class="text-gray-500 text-[9px] sm:text-[10px] block">TOP SPEED</span>
+                            <strong class="text-black text-xs sm:text-sm">350 KM/H</strong>
+                        </div>
+                        <div class="p-1.5 sm:p-2 bg-white border-2 border-black rounded-lg shadow-[2px_2px_0px_#000]">
+                            <span class="text-gray-500 text-[9px] sm:text-[10px] block">FAST CHARGE</span>
+                            <strong class="text-black text-xs sm:text-sm">800V DC</strong>
+                        </div>
+                    </div>
+
+                    <!-- Colorway Picker Pill -->
+                    <div
+                        class="flex items-center justify-between bg-white border-2 border-black rounded-xl p-1.5 sm:p-2 px-2.5 sm:px-3 shadow-[2px_2px_0px_#000] sm:shadow-[3px_3px_0px_#000]">
+                        <span class="text-[11px] sm:text-xs font-mono-tech uppercase font-bold text-black">Body
+                            Finish:</span>
+                        <div class="flex items-center gap-1.5 sm:gap-2">
+                            <button type="button" (click)="setColorway('white')"
+                                [ngClass]="activeColorway === 'white' ? 'ring-2 ring-black scale-110' : ''"
+                                class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-white border-2 border-black shadow-[1px_1px_0px_#000] cursor-pointer"
+                                title="Ceramic White"></button>
+                            <button type="button" (click)="setColorway('cyber')"
+                                [ngClass]="activeColorway === 'cyber' ? 'ring-2 ring-black scale-110' : ''"
+                                class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-slate-900 border-2 border-black shadow-[1px_1px_0px_#000] cursor-pointer"
+                                title="Cyber Obsidian"></button>
+                            <button type="button" (click)="setColorway('mint')"
+                                [ngClass]="activeColorway === 'mint' ? 'ring-2 ring-black scale-110' : ''"
+                                class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#a7f3d0] border-2 border-black shadow-[1px_1px_0px_#000] cursor-pointer"
+                                title="Electric Mint"></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================================================== -->
+            <!-- COLUMN 3 (RIGHT): CARD + TEXT + CTA (Span 3 of 12)    -->
+            <!-- ==================================================== -->
+            <section class="contents lg:col-span-3 lg:flex lg:flex-col lg:justify-between lg:gap-5"
+                aria-label="Endorsements and Booking Action">
+                <!-- 3. BOTTOM CTA BOX (Order 3 on mobile - right under the car for instant conversion!) -->
+                <article (click)="openTestDriveModal(1)"
+                    class="order-3 lg:order-none bg-[#ffc4c4] border-2 border-black rounded-2xl p-4 sm:p-5 shadow-[3px_3px_0px_#0d0f12] sm:shadow-[4px_4px_0px_#0d0f12] flex items-center justify-between cursor-pointer transition-transform hover:translate-x-[-1px] hover:translate-y-[-1px] group">
+                    <div>
+                        <span class="text-[9px] sm:text-[10px] font-mono-tech uppercase font-bold text-black/70 block">
+                            SCHEDULE VIP RUN
+                        </span>
+                        <h3
+                            class="text-base sm:text-xl font-black uppercase text-black tracking-tight m-0 group-hover:underline">
+                            BOOK TEST DRIVE
+                        </h3>
+                    </div>
+
+                    <!-- Circular Black Arrow Button (Exactly like in the screenshot!) -->
+                    <div
+                        class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black text-white flex items-center justify-center border-2 border-black shadow-[2px_2px_0px_#000] group-hover:bg-white group-hover:text-black group-hover:scale-105 transition-all flex-shrink-0">
+                        <nz-icon nzType="right"
+                            class="text-base sm:text-lg transform group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                </article>
+
+                <!-- 1. TOP CARD (Order 5 on mobile, soft mint green with Image Thumbnail) -->
+                <article (click)="openArticleDrawer()"
+                    class="order-5 lg:order-none bg-[#d1fae5] border-2 border-black rounded-2xl p-4 sm:p-5 shadow-[3px_3px_0px_#0d0f12] sm:shadow-[4px_4px_0px_#0d0f12] cursor-pointer transition-transform hover:translate-x-[-1px] hover:translate-y-[-1px] group">
+                    <div
+                        class="w-full h-28 sm:h-32 rounded-xl border-2 border-black overflow-hidden mb-2.5 sm:mb-3 shadow-[2px_2px_0px_#000]">
+                        <img src="/images/powertrain-card.jpg" alt="800V Powertrain and Battery Cell Array"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <h2
+                        class="text-xs uppercase font-mono-tech font-black text-black leading-snug tracking-wider m-0 group-hover:underline">
+                        READ THE SPECIALIZED ARTICLE ON OUR 800V POWERTRAIN BLOG
+                    </h2>
+                    <span
+                        class="inline-flex items-center gap-1 text-[10px] font-mono-tech font-bold uppercase text-slate-700 mt-2">
+                        <span>Explore Engineering</span>
+                        <nz-icon nzType="right" class="text-xs" />
+                    </span>
+                </article>
+
+                <!-- 2. MIDDLE TEXT (Order 7 on mobile, soft cyan) -->
+                <article
+                    class="order-7 lg:order-none bg-[#cffafe] border-2 border-black rounded-2xl p-4 sm:p-5 shadow-[3px_3px_0px_#0d0f12] sm:shadow-[4px_4px_0px_#0d0f12] transition-transform hover:translate-x-[-1px] hover:translate-y-[-1px]">
+                    <div
+                        class="text-[9px] sm:text-[10px] font-mono-tech uppercase font-black text-black tracking-widest mb-1 flex items-center justify-between">
+                        <span>APPROVED BY</span>
+                        <span>FIA &amp; TECH - 2026</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-900 font-semibold leading-relaxed m-0">
+                        "An inspiration for putting the human more in the center of hyper-performance automotive
+                        technology."
+                    </p>
+                    <div
+                        class="mt-2.5 pt-2 border-t border-black/20 text-[9px] sm:text-[10px] font-mono-tech text-gray-700">
+                        Certified ISO-26262 Automotive Safety Integrity Level D
+                    </div>
+                </article>
+            </section>
+
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- FOOTER INFO BAR                                          -->
+        <!-- ======================================================== -->
+        <footer
+            class="pt-3 sm:pt-4 border-t-2 border-black flex flex-col sm:flex-row items-center justify-between text-[11px] sm:text-xs font-mono-tech text-gray-600 gap-2 text-center sm:text-left">
+            <div>
+                <span>MDX MOTORS © 2026 • AI-POWERED HYPERCAR MONOREPO</span>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4 font-bold text-black">
+                <a routerLink="/models" class="hover:underline text-decoration-none text-black">Car Models</a>
+                <span>•</span>
+                <a routerLink="/dashboard" class="hover:underline text-decoration-none text-black">Admin CMS</a>
+                <span>•</span>
+                <button (click)="openTestDriveModal(1)"
+                    class="hover:underline bg-transparent border-0 cursor-pointer font-bold font-mono-tech p-0 text-black">
+                    Book Track Experience
+                </button>
+            </div>
+        </footer>
+    </main>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL: TEST DRIVE MULTI-STEP VERIFICATION & BOOKING FLOW -->
+<!-- ======================================================== -->
+<nz-modal [(nzVisible)]="isTestDriveModalVisible" [nzFooter]="null" [nzClosable]="false" [nzMaskClosable]="true"
+    (nzOnCancel)="closeTestDriveModal()" [nzWidth]="modalWidth" nzWrapClassName="neo-modal" nzCentered>
+    <ng-container *nzModalContent>
+        <app-test-drive-flow [initialStep]="initialTestDriveStep" [isModalMode]="true" (close)="closeTestDriveModal()"
+            (completed)="closeTestDriveModal()"></app-test-drive-flow>
+    </ng-container>
+</nz-modal>
+
+<!-- ======================================================== -->
+<!-- MODAL: MOBILE QR CODE SCANNER SIMULATOR                   -->
+<!-- ======================================================== -->
+<nz-modal [(nzVisible)]="isQrModalVisible" [nzFooter]="null" [nzClosable]="true" (nzOnCancel)="closeQrModal()"
+    [nzWidth]="qrModalWidth" nzWrapClassName="neo-modal" nzCentered>
+    <ng-container *nzModalContent>
+        <div class="p-3 sm:p-4 text-center space-y-3 sm:space-y-4">
+            <div
+                class="inline-flex p-2.5 sm:p-3 rounded-2xl bg-[#fef08a] border-2 border-black shadow-[3px_3px_0px_#000]">
+                <nz-icon nzType="qrcode" class="text-2xl sm:text-3xl text-black" />
+            </div>
+            <h3 class="text-lg sm:text-xl font-black uppercase text-black m-0">Scan with Mobile</h3>
+            <p class="text-xs text-gray-600">
+                Scan this QR code with your smartphone camera to instantly initiate mobile number verification and
+                unlock car details on mobile.
+            </p>
+
+            <!-- REAL SCANNABLE QR CODE MATRIX -->
+            <div
+                class="w-auto inline-flex p-3 bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_#000] flex-col items-center justify-center mx-auto">
+                <nz-qrcode [nzValue]="qrCodeScanUrl" [nzSize]="170" [nzColor]="'#000000'"
+                    [nzBgColor]="'#ffffff'"></nz-qrcode>
+                <span class="text-[9px] font-mono-tech uppercase font-bold text-black mt-2">POINT CAMERA TO OPEN ON
+                    MOBILE</span>
+            </div>
+
+
+            <button type="button" (click)="closeQrModal(); openTestDriveModal(1)"
+                class="w-full py-3 bg-black text-white font-bold text-xs uppercase rounded-xl border-2 border-black shadow-[3px_3px_0px_#000] hover:bg-[#ffc4c4] hover:text-black transition-all cursor-pointer">
+                Or Continue Directly On Device ➔
+            </button>
+        </div>
+    </ng-container>
+</nz-modal>
+
+<!-- ======================================================== -->
+<!-- MODAL: AUDIO TELEMETRY & COCKPIT HUD PREVIEW             -->
+<!-- ======================================================== -->
+<nz-modal [(nzVisible)]="isMediaModalVisible" [nzFooter]="null" [nzClosable]="true" (nzOnCancel)="closeMediaModal()"
+    [nzWidth]="mediaModalWidth" nzWrapClassName="neo-modal" nzCentered>
+    <ng-container *nzModalContent>
+        <div class="p-2 sm:p-3 space-y-3 sm:space-y-4">
+            <div class="flex items-center justify-between border-b-2 border-black pb-2 sm:pb-3">
+                <div>
+                    <span class="text-[10px] sm:text-xs font-mono-tech uppercase font-bold text-gray-500">Telemetry
+                        Teaser</span>
+                    <h3 class="text-lg sm:text-xl font-black uppercase text-black m-0">Cockpit Audio &amp; HUD</h3>
+                </div>
+                <span
+                    class="px-2 py-0.5 bg-[#d1fae5] text-black border border-black font-mono-tech text-[10px] sm:text-xs font-bold rounded">
+                    LIVE DEMO
+                </span>
+            </div>
+
+            <div
+                class="relative rounded-xl border-2 border-black overflow-hidden shadow-[3px_3px_0px_#000] sm:shadow-[4px_4px_0px_#000]">
+                <img src="/images/cockpit-media.jpg" alt="APEX Velocity GT HUD Cockpit"
+                    class="w-full h-44 sm:h-64 object-cover" />
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3 sm:p-4">
+                    <div class="text-white space-y-0.5 sm:space-y-1">
+                        <span class="text-[9px] sm:text-[10px] font-mono-tech uppercase text-[#d1fae5]">0-100 KM/H
+                            TELEMETRY RUN</span>
+                        <h4 class="text-sm sm:text-base font-bold text-white m-0">Apex Circuit Lap Record: 1:34:42</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="p-3 sm:p-4 bg-[#f0e6fc] border-2 border-black rounded-xl shadow-[2px_2px_0px_#000] sm:shadow-[3px_3px_0px_#000] flex items-center justify-between">
+                <div class="flex items-center gap-2.5 sm:gap-3">
+                    <button type="button" (click)="toggleEngineSound()"
+                        class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-black text-white flex items-center justify-center border-2 border-black hover:bg-white hover:text-black transition-colors cursor-pointer flex-shrink-0">
+                        <nz-icon [nzType]="isPlayingAudio ? 'close' : 'play-circle'" class="text-base sm:text-lg" />
+                    </button>
+                    <div>
+                        <strong class="text-[11px] sm:text-xs uppercase font-mono-tech block">Synthesized Turbine
+                            Sound</strong>
+                        <span class="text-[10px] sm:text-[11px] text-gray-600 block">
+                            {{ isPlayingAudio ? 'Playing 1,420 HP Axial Rev...' : 'Click to hear hypercar electric rev
+                            sound' }}
+                        </span>
+                    </div>
+                </div>
+
+                @if (isPlayingAudio) {
+                <div class="flex items-center gap-1 flex-shrink-0">
+                    <span class="w-1.5 h-3 sm:h-4 bg-black rounded-full animate-bounce"></span>
+                    <span class="w-1.5 h-5 sm:h-6 bg-black rounded-full animate-bounce delay-100"></span>
+                    <span class="w-1.5 h-2.5 sm:h-3 bg-black rounded-full animate-bounce delay-200"></span>
+                    <span class="w-1.5 h-6 sm:h-7 bg-black rounded-full animate-bounce delay-300"></span>
+                </div>
+                }
+            </div>
+
+            <button type="button" (click)="closeMediaModal(); openTestDriveModal(1)"
+                class="w-full py-3 sm:py-3.5 bg-black text-white font-bold text-xs uppercase rounded-xl border-2 border-black shadow-[3px_3px_0px_#000] hover:bg-[#d6e4ff] hover:text-black transition-all cursor-pointer">
+                Experience In Person: Reserve Test Drive ➔
+            </button>
+        </div>
+    </ng-container>
+</nz-modal>
+
+<!-- ======================================================== -->
+<!-- DRAWER: SPECIALIZED ARTICLE ON 800V POWERTRAIN           -->
+<!-- ======================================================== -->
+<nz-drawer [nzVisible]="isArticleDrawerVisible" nzPlacement="right" nzTitle="POWERTRAIN ENGINEERING REPORT"
+    [nzWidth]="articleDrawerWidth" (nzOnClose)="closeArticleDrawer()">
+    <ng-container *nzDrawerContent>
+        <div class="space-y-4 sm:space-y-6">
+            <div class="rounded-xl border-2 border-black overflow-hidden shadow-[3px_3px_0px_#000]">
+                <img src="/images/powertrain-card.jpg" alt="Powertrain architecture"
+                    class="w-full h-44 sm:h-52 object-cover" />
+            </div>
+
+            <div class="space-y-2 sm:space-y-3">
+                <span
+                    class="px-2 py-0.5 bg-[#d1fae5] border border-black font-mono-tech text-[10px] font-bold rounded uppercase">
+                    MDX LAB Tech Whitepaper • 2026
+                </span>
+                <h3 class="text-xl sm:text-2xl font-black uppercase text-black m-0">
+                    The 800V Axial Flux Motor &amp; Carbon Core Architecture
+                </h3>
+                <p class="text-xs text-gray-500 font-mono-tech">
+                    Authored by Chief Powertrain Architect • 5 min read
+                </p>
+            </div>
+
+            <div class="prose text-xs text-slate-800 leading-relaxed space-y-2.5 font-medium">
+                <p>
+                    The MDX APEX VELOCITY GT utilizes dual direct-drive axial flux electric motors delivering 1,420
+                    combined horsepower and 1,750 Nm of torque directly to the wheels without transmission friction
+                    losses.
+                </p>
+                <div class="p-3 bg-gray-100 border-2 border-black rounded-lg font-mono-tech text-xs">
+                    <strong>Key Highlights:</strong>
+                    <ul class="list-disc pl-4 mt-1 space-y-1 text-slate-700">
+                        <li>Sub-2.0 second 0-100 km/h acceleration telemetry</li>
+                        <li>Direct liquid immersion cell cooling with 800V DC peak charging</li>
+                        <li>Torque vectoring adjusting individual wheel yaw 1,000 times/sec</li>
+                    </ul>
+                </div>
+                <p>
+                    By lowering the center of gravity and placing the cell modules in the monocoque floor pan, we
+                    achieve 50:50 weight distribution and exceptional high-speed lateral g-force stability.
+                </p>
+            </div>
+
+            <div class="pt-3 sm:pt-4 border-t-2 border-black">
+                <button type="button" (click)="closeArticleDrawer(); openTestDriveModal(1)"
+                    class="w-full py-3.5 sm:py-4 bg-black text-white font-bold text-xs uppercase rounded-xl border-2 border-black shadow-[3px_3px_0px_#000] hover:bg-[#ffc4c4] hover:text-black transition-all cursor-pointer">
+                    Book Your Track Test Drive Today ➔
+                </button>
+            </div>
+        </div>
+    </ng-container>
+</nz-drawer>

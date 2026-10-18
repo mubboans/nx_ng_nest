@@ -1,0 +1,568 @@
+<div class="test-drive-container relative w-full bg-white" [ngClass]="isModalMode ? 'p-3 sm:p-6' : 'rounded-2xl border-2 sm:border-3 border-black p-4 sm:p-7 shadow-[4px_4px_0px_#0d0f12] sm:shadow-[8px_8px_0px_#0d0f12]'">
+  <!-- Top Bar: Progress Indicator & Close button -->
+  <div class="flex items-center justify-between pb-3.5 sm:pb-5 border-b-2 border-black mb-4 sm:mb-6">
+    <div class="flex items-center space-x-2.5 sm:space-x-3">
+      <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs sm:text-sm flex-shrink-0">
+        {{ currentStep }}
+      </div>
+      <div>
+        <span class="text-[10px] sm:text-xs uppercase tracking-widest font-mono-tech text-gray-500 block">Step {{ currentStep }} of 4</span>
+        <h3 class="text-sm sm:text-lg font-bold uppercase tracking-tight text-black m-0 truncate max-w-[180px] sm:max-w-none">
+          @if (currentStep === 1) { Mobile &amp; Email }
+          @else if (currentStep === 2) { OTP Verification }
+          @else if (currentStep === 3) { Driver Profile }
+          @else { VIP Test Drive }
+        </h3>
+      </div>
+    </div>
+
+
+    <!-- Step Pills (Hidden on very small screens, visible on tablets/desktops) -->
+    <div class="hidden sm:flex items-center space-x-1.5 sm:space-x-2">
+      <span class="w-6 sm:w-8 h-2 rounded-full border border-black transition-all"
+        [ngClass]="currentStep >= 1 ? 'bg-black' : 'bg-gray-200'"></span>
+      <span class="w-6 sm:w-8 h-2 rounded-full border border-black transition-all"
+        [ngClass]="currentStep >= 2 ? 'bg-black' : 'bg-gray-200'"></span>
+      <span class="w-6 sm:w-8 h-2 rounded-full border border-black transition-all"
+        [ngClass]="currentStep >= 3 ? 'bg-black' : 'bg-gray-200'"></span>
+      <span class="w-6 sm:w-8 h-2 rounded-full border border-black transition-all"
+        [ngClass]="currentStep >= 4 ? 'bg-black' : 'bg-gray-200'"></span>
+    </div>
+
+    @if (isModalMode) {
+      <button (click)="onClose()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg border-2 border-black flex items-center justify-center bg-gray-100 hover:bg-black hover:text-white transition-colors cursor-pointer shadow-[2px_2px_0px_#000] flex-shrink-0">
+        <nz-icon nzType="close" />
+      </button>
+    }
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- STEP 1: MOBILE NUMBER & EMAIL ENTRY                      -->
+  <!-- ======================================================== -->
+  @if (currentStep === 1) {
+    <div class="space-y-5 animate-fadeIn">
+      <div class="bg-[#d6e4ff] border-2 border-black rounded-xl p-3.5 sm:p-4 shadow-[3px_3px_0px_#000]">
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <div class="p-1.5 sm:p-2 bg-black text-white rounded-lg flex-shrink-0">
+            <nz-icon nzType="thunderbolt" class="text-base sm:text-lg" />
+          </div>
+          <div>
+            <h4 class="font-bold text-black text-sm sm:text-base uppercase m-0">VIP Track Access Pass</h4>
+            <p class="text-xs text-slate-800 m-0 mt-0.5 leading-relaxed">
+              Verify credentials to unlock APEX VELOCITY GT telemetry and reserve your test drive.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <form #stepOneForm="ngForm" (ngSubmit)="sendMobileAndEmailVerification()" class="space-y-4">
+        <!-- Mobile Input -->
+        <div>
+          <label class="block text-xs font-mono-tech uppercase font-bold text-gray-700 mb-1">
+            Driver Contact / Mobile Number (10 Digits) *
+          </label>
+          <div class="flex">
+            <span class="inline-flex items-center px-3 sm:px-4 rounded-l-lg border-2 border-r-0 border-black bg-gray-100 text-black font-bold font-mono-tech text-xs sm:text-sm">
+              +91
+            </span>
+            <input
+              type="tel"
+              name="contact"
+              [(ngModel)]="user.contact"
+              required
+              pattern="^[6-9][0-9]{9}$"
+              #contactModel="ngModel"
+              placeholder="e.g. 9876543210"
+              class="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm border-2 border-black rounded-r-lg font-mono-tech font-bold focus:outline-none focus:ring-0 shadow-[2px_2px_0px_#000]"
+            />
+          </div>
+          @if (contactModel.invalid && contactModel.touched) {
+            <p class="text-xs text-red-600 font-bold mt-1">
+              Must be a valid 10-digit number starting with 6-9
+            </p>
+          }
+        </div>
+
+        <!-- Email Input -->
+        <div>
+          <label class="block text-xs font-mono-tech uppercase font-bold text-gray-700 mb-1">
+            Email Address for Telemetry &amp; Pass *
+          </label>
+          <div class="relative">
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="user.email"
+              required
+              email
+              #emailModel="ngModel"
+              placeholder="driver@mdxmotors.com"
+              class="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm border-2 border-black rounded-lg font-mono-tech font-semibold focus:outline-none focus:ring-0 shadow-[2px_2px_0px_#000]"
+            />
+          </div>
+          @if (emailModel.invalid && emailModel.touched) {
+            <p class="text-xs text-red-600 font-bold mt-1">
+              Please enter a valid email address
+            </p>
+          }
+        </div>
+
+        <!-- Actions -->
+        <div class="pt-2">
+          <button
+            type="submit"
+            [disabled]="stepOneForm.invalid || isLoading"
+            class="w-full py-3.5 sm:py-4 bg-black text-white font-bold text-sm sm:text-base uppercase rounded-xl border-2 border-black shadow-[3px_3px_0px_#000] sm:shadow-[4px_4px_0px_#000] hover:bg-[#ffc4c4] hover:text-black hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer flex items-center justify-center gap-2"
+          >
+            @if (isLoading) {
+              <nz-icon nzType="loading" />
+              <span>Verifying Driver Account...</span>
+            } @else {
+              <nz-icon nzType="send" />
+              <span>Send OTP Verification Code</span>
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- ======================================================== -->
+  <!-- STEP 2: HIGH EFFICIENCY OTP VERIFICATION                 -->
+  <!-- ======================================================== -->
+  @if (currentStep === 2) {
+    <div class="space-y-5 animate-fadeIn">
+      <div class="text-center space-y-1.5">
+        <div class="inline-flex p-2.5 sm:p-3 rounded-2xl bg-[#e3d2ff] border-2 border-black shadow-[3px_3px_0px_#000]">
+          <nz-icon nzType="safety-certificate" class="text-xl sm:text-2xl text-black" />
+        </div>
+        <h4 class="text-lg sm:text-xl font-bold uppercase tracking-tight text-black m-0">Enter 6-Digit Code</h4>
+        <p class="text-xs sm:text-sm text-gray-600 truncate max-w-full">
+          Code sent to <span class="font-bold text-black font-mono-tech">{{ user.email }}</span>
+        </p>
+      </div>
+
+      <!-- OTP Input Block (Responsive Centered) -->
+      <div class="py-2 flex flex-col items-center justify-center w-full overflow-hidden">
+        <div class="max-w-full overflow-x-auto px-1 py-1">
+          <nz-input-otp
+            [nzLength]="otpLength"
+            [(ngModel)]="otpCode"
+            (ngModelChange)="onOtpInput($event)"
+            [nzStatus]="showError ? 'error' : ''"
+            class="neo-otp-input font-mono-tech"
+          ></nz-input-otp>
+        </div>
+
+        @if (showError) {
+          <div class="w-full mt-3">
+            <nz-alert nzType="error" [nzMessage]="errorMessage" nzShowIcon class="border-2 border-black shadow-[3px_3px_0px_#000] text-xs"></nz-alert>
+          </div>
+        }
+      </div>
+
+      <!-- Demo quick filler for seamless verification testing -->
+      @if (demoOtpHint) {
+        <div class="bg-[#fef08a] border-2 border-black rounded-lg p-2.5 sm:p-3 text-center shadow-[2px_2px_0px_#000] flex flex-wrap items-center justify-center gap-2">
+          <span class="text-[11px] sm:text-xs uppercase font-bold text-black">Code:</span>
+          <code class="font-mono font-bold text-sm sm:text-base bg-white px-2 py-0.5 rounded border border-black">{{ demoOtpHint }}</code>
+          <button
+            type="button"
+            (click)="fillDemoOtp()"
+            class="text-[10px] sm:text-xs uppercase font-bold px-2.5 py-1 bg-black text-white rounded border border-black hover:bg-slate-800"
+          >
+            Auto-Fill
+          </button>
+        </div>
+      }
+
+      <!-- Verify Button -->
+      <div class="space-y-3">
+        <button
+          type="button"
+          (click)="verifyOtp()"
+          [disabled]="otpCode.length !== otpLength || isLoading"
+          class="w-full py-3.5 sm:py-4 bg-black text-white font-bold text-sm sm:text-base uppercase rounded-xl border-2 border-black shadow-[3px_3px_0px_#000] sm:shadow-[4px_4px_0px_#000] hover:bg-[#d1fae5] hover:text-black hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer flex items-center justify-center gap-2"
+        >
+          @if (isLoading) {
+            <nz-icon nzType="loading" />
+            <span>Validating Code...</span>
+          } @else {
+            <nz-icon nzType="check-circle" />
+            <span>Verify &amp; Proceed</span>
+          }
+        </button>
+
+        <!-- Resend Timer -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono-tech pt-1">
+          <button
+            type="button"
+            (click)="currentStep = 1"
+            class="text-gray-600 hover:text-black font-bold flex items-center gap-1 cursor-pointer bg-transparent border-0"
+          >
+            <nz-icon nzType="arrow-left" /> Edit Mobile/Email
+          </button>
+
+          <div>
+            @if (resendDisabled) {
+              <span class="text-gray-500">Resend in <strong class="text-black">{{ resendCountdown }}s</strong></span>
+            } @else {
+              <button
+                type="button"
+                (click)="resendCode()"
+                class="text-black font-bold underline hover:text-blue-700 cursor-pointer bg-transparent border-0"
+              >
+                Resend Code
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ======================================================== -->
+  <!-- STEP 3: USER DETAILS SCREEN (FIRST TIME USERS)           -->
+  <!-- ======================================================== -->
+  @if (currentStep === 3) {
+    <div class="space-y-5 animate-fadeIn">
+      <div class="bg-[#d1fae5] border-2 border-black rounded-xl p-3.5 sm:p-4 shadow-[3px_3px_0px_#000]">
+        <div class="flex items-start gap-2.5 sm:gap-3">
+          <div class="p-1.5 sm:p-2 bg-black text-white rounded-lg flex-shrink-0">
+            <nz-icon nzType="idcard" class="text-base sm:text-lg" />
+          </div>
+          <div>
+            <h4 class="font-bold text-black text-sm sm:text-base uppercase m-0">First-Time Driver Profile</h4>
+            <p class="text-xs text-slate-800 m-0 mt-0.5 leading-relaxed">
+              Complete your profile details to unlock test drive access and track telemetry pass.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <form #detailsForm="ngForm" (ngSubmit)="submitUserDetails(detailsForm)" class="space-y-3.5">
+        <!-- Full Name -->
+        <div>
+          <label class="block text-xs font-mono-tech uppercase font-bold text-gray-700 mb-1">
+            Full Name *
+          </label>
+          <input
+            type="text"
+            name="username"
+            [(ngModel)]="user.username"
+            required
+            #nameModel="ngModel"
+            placeholder="e.g. Alex Mercer"
+            class="w-full px-3.5 py-2.5 sm:py-3 text-sm border-2 border-black rounded-lg font-semibold focus:outline-none focus:ring-0 shadow-[2px_2px_0px_#000]"
+          />
+          @if (nameModel.invalid && nameModel.touched) {
+            <p class="text-xs text-red-600 font-bold mt-1">Full name is required</p>
+          }
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- Email (Verified & Readonly) -->
+          <div>
+            <label class="block text-xs font-mono-tech uppercase font-bold text-gray-700 mb-1">
+              Verified Email *
+            </label>
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="user.email"
+              readonly
+              class="w-full px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm border-2 border-black rounded-lg bg-gray-100 font-mono-tech text-gray-700 cursor-not-allowed shadow-[2px_2px_0px_#000]"
+            />
+          </div>
+
+          <!-- Contact (Verified) -->
+          <div>
+            <label class="block text-xs font-mono-tech uppercase font-bold text-gray-700 mb-1">
+              Contact Number *
+            </label>
+            <input
+              type="tel"
+              name="contact"
+              [(ngModel)]="user.contact"
+              required
+              pattern="^[6-9][0-9]{9}$"
+              placeholder="10-digit mobile"
+              class="w-full px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm border-2 border-black rounded-lg font-mono-tech font-semibold focus:outline-none focus:ring-0 shadow-[2px_2px_0px_#000]"
+            />
+          </div>
+        </div>
+
+        <!-- Gender Preference -->
+        <div>
+          <label class="block text-xs font-mono-tech uppercase font-bold text-gray-700 mb-1">
+            Gender *
+          </label>
+          <nz-select
+            name="gender"
+            [(ngModel)]="user.gender"
+            class="w-full neo-select"
+            nzPlaceHolder="Select gender"
+          >
+            <nz-option nzValue="male" nzLabel="Male"></nz-option>
+            <nz-option nzValue="female" nzLabel="Female"></nz-option>
+            <nz-option nzValue="other" nzLabel="Other"></nz-option>
+            <nz-option nzValue="prefer_not_to_say" nzLabel="Prefer Not to Say"></nz-option>
+          </nz-select>
+        </div>
+
+        <!-- Short Detail / Driving Background -->
+        <div>
+          <label class="block text-xs font-mono-tech uppercase font-bold text-gray-700 mb-1">
+            Short Details / Driving Preferences *
+          </label>
+          <textarea
+            name="bio"
+            [(ngModel)]="user.bio"
+            rows="2"
+            placeholder="Tell us about your driving experience (e.g. valid license, track experience, preferred drive modes)..."
+            class="w-full px-3.5 py-2.5 text-xs sm:text-sm border-2 border-black rounded-lg focus:outline-none focus:ring-0 shadow-[2px_2px_0px_#000]"
+          ></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2">
+          <button
+            type="submit"
+            [disabled]="detailsForm.invalid || isLoading"
+            class="w-full py-3.5 sm:py-4 bg-black text-white font-bold text-sm sm:text-base uppercase rounded-xl border-2 border-black shadow-[3px_3px_0px_#000] sm:shadow-[4px_4px_0px_#000] hover:bg-[#d1fae5] hover:text-black hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer flex items-center justify-center gap-2"
+          >
+            @if (isLoading) {
+              <nz-icon nzType="loading" />
+              <span>Saving Driver Details...</span>
+            } @else {
+              <nz-icon nzType="car" />
+              <span>Save &amp; View Car Test Drive Details</span>
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- ======================================================== -->
+  <!-- STEP 4: CAR DETAIL & VIP TEST DRIVE SCHEDULING           -->
+  <!-- ======================================================== -->
+  <!-- ======================================================== -->
+  <!-- STEP 4: CAR DETAIL & VIP TEST DRIVE SCHEDULING           -->
+  <!-- ======================================================== -->
+  @if (currentStep === 4) {
+    <div class="space-y-4 animate-fadeIn w-full max-w-full overflow-hidden">
+      @if (!bookingConfirmed) {
+        <!-- Compact Responsive Car Showcase Banner -->
+        <div class="bg-[#f0e6fc] border-2 border-black rounded-xl p-3 sm:p-4 shadow-[2px_2px_0px_#000] sm:shadow-[3px_3px_0px_#000]">
+          <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+            <!-- Visual Thumbnail -->
+            <div class="w-full sm:w-2/5 relative rounded-lg border-2 border-black overflow-hidden bg-white shadow-[2px_2px_0px_#000] h-28 sm:h-36 flex-shrink-0">
+              <img src="/images/hypercar-hero.jpg" alt="Apex Velocity GT" class="w-full h-full object-cover" />
+              <div class="absolute bottom-1 right-1 px-1.5 py-0.5 bg-black text-white text-[8px] font-mono-tech uppercase font-bold rounded">
+                1,420 HP
+              </div>
+            </div>
+
+            <!-- Info & Specs -->
+            <div class="w-full sm:w-3/5 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 bg-black text-white text-[9px] uppercase font-mono-tech font-bold rounded">
+                  Hyper EV Flagship
+                </span>
+                <span class="text-xs font-mono-tech font-bold text-black">{{ carDetails.price }}</span>
+              </div>
+              <h4 class="text-base sm:text-lg font-black uppercase tracking-tight text-black m-0 leading-tight">
+                {{ carDetails.name }}
+              </h4>
+
+              <!-- 4 Quick Specs in compact 4-col grid -->
+              <div class="grid grid-cols-4 gap-1 text-center font-mono-tech">
+                <div class="p-1 bg-white border border-black rounded">
+                  <span class="text-[8px] text-gray-500 block">HP</span>
+                  <strong class="text-[10px] text-black">1,420</strong>
+                </div>
+                <div class="p-1 bg-white border border-black rounded">
+                  <span class="text-[8px] text-gray-500 block">0-100</span>
+                  <strong class="text-[10px] text-black">1.89s</strong>
+                </div>
+                <div class="p-1 bg-white border border-black rounded">
+                  <span class="text-[8px] text-gray-500 block">TOP</span>
+                  <strong class="text-[10px] text-black">350</strong>
+                </div>
+                <div class="p-1 bg-white border border-black rounded">
+                  <span class="text-[8px] text-gray-500 block">RANGE</span>
+                  <strong class="text-[10px] text-black">680km</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Schedule Options Grid -->
+        <div class="space-y-3">
+          <h4 class="text-xs sm:text-sm font-mono-tech uppercase font-bold text-black flex items-center gap-1.5 m-0">
+            <nz-icon nzType="calendar" /> Select Test Drive Schedule &amp; Track
+          </h4>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <!-- Experience Center -->
+            <div>
+              <label class="block text-[11px] font-mono-tech uppercase font-bold text-gray-700 mb-1">
+                Experience Location
+              </label>
+              <nz-select
+                [(ngModel)]="booking.location"
+                class="w-full neo-select"
+              >
+                <nz-option nzValue="Apex Silicon Bay Experience Center" nzLabel="Apex Silicon Bay Proving Ground"></nz-option>
+                <nz-option nzValue="Cyber Ring Circuit (Closed Track)" nzLabel="Cyber Ring Circuit (Track)"></nz-option>
+                <nz-option nzValue="Downtown Metro Flagship Studio" nzLabel="Downtown Metro Flagship Studio"></nz-option>
+              </nz-select>
+            </div>
+
+            <!-- Session Type -->
+            <div>
+              <label class="block text-[11px] font-mono-tech uppercase font-bold text-gray-700 mb-1">
+                Drive Session Type
+              </label>
+              <nz-select
+                [(ngModel)]="booking.experienceType"
+                class="w-full neo-select"
+              >
+                <nz-option nzValue="Track Session" nzLabel="Track Session (High Speed Telemetry)"></nz-option>
+                <nz-option nzValue="Street Cruising" nzLabel="Street Cruising (Urban Agility)"></nz-option>
+                <nz-option nzValue="Hyper Velocity VIP" nzLabel="Hyper Velocity VIP (Full 1,420 HP)"></nz-option>
+              </nz-select>
+            </div>
+
+            <!-- Date Picker -->
+            <div>
+              <label class="block text-[11px] font-mono-tech uppercase font-bold text-gray-700 mb-1">
+                Preferred Date
+              </label>
+              <nz-date-picker
+                [(ngModel)]="booking.driveDate"
+                class="w-full text-xs sm:text-sm"
+              ></nz-date-picker>
+            </div>
+
+            <!-- Time Slot -->
+            <div>
+              <label class="block text-[11px] font-mono-tech uppercase font-bold text-gray-700 mb-1">
+                Time Slot
+              </label>
+              <nz-select
+                [(ngModel)]="booking.timeSlot"
+                class="w-full neo-select"
+              >
+                <nz-option nzValue="10:00 - 11:30 (Morning Circuit Run)" nzLabel="10:00 - 11:30 (Morning Run)"></nz-option>
+                <nz-option nzValue="14:00 - 15:30 (Sunset Session)" nzLabel="14:00 - 15:30 (Sunset Run)"></nz-option>
+                <nz-option nzValue="17:00 - 18:30 (Night Glow Run)" nzLabel="17:00 - 18:30 (Night Run)"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+
+          <!-- Confirm CTA -->
+          <button
+            type="button"
+            (click)="confirmTestDrive()"
+            [disabled]="isLoading"
+            class="w-full py-3 sm:py-3.5 bg-[#ffc4c4] text-black font-black text-xs sm:text-sm uppercase rounded-xl border-2 border-black shadow-[2px_2px_0px_#000] sm:shadow-[3px_3px_0px_#000] hover:bg-black hover:text-white transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
+          >
+            @if (isLoading) {
+              <nz-icon nzType="loading" />
+              <span>Generating VIP Boarding Pass...</span>
+            } @else {
+              <nz-icon nzType="check-circle" />
+              <span>Confirm VIP Test Drive Reservation</span>
+            }
+          </button>
+        </div>
+      } @else {
+        <!-- CONFIRMED BOARDING PASS (NEO-BRUTALIST TICKET) -->
+        <div class="ticket-wrapper border-2 border-black rounded-xl sm:rounded-2xl bg-white overflow-hidden shadow-[3px_3px_0px_#0d0f12] animate-fadeIn w-full">
+          <!-- Ticket Header -->
+          <div class="bg-black text-white p-2.5 sm:p-3.5 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-[#d1fae5] animate-pulse"></span>
+              <span class="font-mono-tech font-bold uppercase text-[9px] sm:text-xs tracking-wider text-[#d1fae5]">
+                VIP Boarding Pass • Confirmed
+              </span>
+            </div>
+            <span class="font-mono-tech font-bold text-[10px] sm:text-xs">{{ booking.confirmationCode }}</span>
+          </div>
+
+          <!-- Ticket Body -->
+          <div class="p-3 sm:p-5 space-y-3 sm:space-y-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b-2 border-dashed border-gray-300 pb-3">
+              <div>
+                <span class="text-[9px] uppercase font-mono-tech text-gray-500">Reserved For</span>
+                <h4 class="text-base sm:text-lg font-black uppercase text-black m-0 leading-tight">{{ user.username || 'Authorized Driver' }}</h4>
+                <span class="text-[10px] font-mono-tech text-gray-600 block">{{ user.email }} • {{ user.contact }}</span>
+              </div>
+
+              <div class="text-left sm:text-right">
+                <span class="text-[9px] uppercase font-mono-tech text-gray-500">Vehicle</span>
+                <h5 class="text-xs sm:text-sm font-black uppercase text-black m-0 leading-tight">{{ booking.carModel }}</h5>
+                <span class="text-[9px] font-mono-tech bg-[#d1fae5] px-1.5 py-0.5 rounded border border-black inline-block mt-0.5">
+                  {{ booking.experienceType }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Schedule Badges -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 font-mono-tech text-xs">
+              <div class="p-2 bg-[#e0f2fe] border border-black rounded-lg">
+                <span class="text-gray-500 text-[8px] sm:text-[9px] block uppercase">Location</span>
+                <strong class="text-black block text-xs truncate">{{ booking.location }}</strong>
+              </div>
+              <div class="p-2 bg-[#fef08a] border border-black rounded-lg">
+                <span class="text-gray-500 text-[8px] sm:text-[9px] block uppercase">Scheduled Date</span>
+                <strong class="text-black block text-xs">{{ booking.driveDate | date:'mediumDate' }}</strong>
+              </div>
+              <div class="p-2 bg-[#f0e6fc] border border-black rounded-lg">
+                <span class="text-gray-500 text-[8px] sm:text-[9px] block uppercase">Time Slot</span>
+                <strong class="text-black block text-xs">{{ booking.timeSlot }}</strong>
+              </div>
+            </div>
+
+            <!-- Fast-track gate stamp with REAL SCANNABLE QR CODE -->
+            <div class="bg-gray-50 border-2 border-black rounded-xl p-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+              <div class="space-y-0.5">
+                <h5 class="text-xs sm:text-sm font-bold uppercase m-0">Fast-Track Gate Pass</h5>
+                <p class="text-[10px] sm:text-[11px] text-gray-600 m-0">
+                  Present this QR pass at the paddock gate for driver verification.
+                </p>
+              </div>
+
+              <!-- REAL SCANNABLE 2D QR CODE STAMP -->
+              <div class="p-1.5 bg-white border-2 border-black rounded-xl shadow-[2px_2px_0px_#000] flex flex-col items-center justify-center flex-shrink-0">
+                <nz-qrcode [nzValue]="boardingPassQrValue" [nzSize]="82" [nzColor]="'#000000'" [nzBgColor]="'#ffffff'"></nz-qrcode>
+                <span class="text-[7px] font-mono-tech uppercase font-bold mt-0.5 text-black">SCAN AT GATE</span>
+              </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-2 pt-1">
+              <button
+                type="button"
+                (click)="onClose()"
+                class="flex-1 py-2.5 sm:py-3 bg-black text-white font-bold text-xs uppercase rounded-xl border-2 border-black shadow-[2px_2px_0px_#000] hover:bg-[#d6e4ff] hover:text-black transition-all cursor-pointer"
+              >
+                Return to Showcase
+              </button>
+              <button
+                type="button"
+                (click)="resetBooking()"
+                class="py-2.5 sm:py-3 px-4 bg-white text-black font-bold text-xs uppercase rounded-xl border-2 border-black shadow-[2px_2px_0px_#000] hover:bg-gray-100 transition-all cursor-pointer"
+              >
+                Modify Reservation
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</div>

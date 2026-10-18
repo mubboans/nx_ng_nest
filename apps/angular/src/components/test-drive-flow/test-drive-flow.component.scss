@@ -1,0 +1,110 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+:host ::ng-deep {
+  .ant-input-otp {
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+    gap: 6px;
+
+    @media (min-width: 480px) {
+      gap: 10px;
+    }
+
+    .ant-input-otp-input {
+      width: 36px !important;
+      height: 44px !important;
+      font-size: 1.15rem !important;
+      padding: 0 !important;
+      border: 2px solid #0d0f12 !important;
+      box-shadow: 2px 2px 0px #0d0f12 !important;
+      border-radius: 8px !important;
+      font-weight: 800 !important;
+      background-color: #ffffff;
+      transition: all 0.15s ease;
+
+      @media (min-width: 480px) {
+        width: 46px !important;
+        height: 52px !important;
+        font-size: 1.4rem !important;
+        box-shadow: 3px 3px 0px #0d0f12 !important;
+        border-radius: 10px !important;
+      }
+
+      @media (min-width: 640px) {
+        width: 50px !important;
+        height: 56px !important;
+        font-size: 1.5rem !important;
+      }
+
+      &:focus {
+        background-color: #f0e6fc;
+        transform: translate(-1px, -1px);
+        box-shadow: 4px 4px 0px #0d0f12 !important;
+      }
+    }
+  }
+
+  .neo-select {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    .ant-select-selector {
+      border: 2px solid #0d0f12 !important;
+      border-radius: 8px !important;
+      padding: 4px 10px !important;
+      height: auto !important;
+      min-height: 40px !important;
+      box-shadow: 2px 2px 0px #0d0f12 !important;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
+    .ant-select-selection-item {
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      max-width: calc(100% - 20px) !important;
+    }
+  }
+
+  nz-date-picker, .ant-picker {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 40px !important;
+    border: 2px solid #0d0f12 !important;
+    border-radius: 8px !important;
+    box-shadow: 2px 2px 0px #0d0f12 !important;
+    box-sizing: border-box !important;
+
+    .ant-picker-input > input {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-weight: 700 !important;
+      font-size: 0.85rem !important;
+    }
+  }
+}
+
+/* Mobile responsive padding & touch optimizations */
+@media (max-width: 640px) {
+  .test-drive-container {
+    padding: 0.875rem !important;
+    border-width: 0 !important;
+    box-shadow: none !important;
+  }
+}
+

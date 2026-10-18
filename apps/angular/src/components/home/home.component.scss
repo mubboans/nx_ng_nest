@@ -1,0 +1,90 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(1.05);
+  }
+}
+
+::ng-deep {
+  .ant-modal-wrap.neo-modal {
+    padding: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    .ant-modal {
+      max-width: calc(100vw - 16px) !important;
+      width: calc(100vw - 16px) !important;
+      margin: 8px auto !important;
+      top: 0 !important;
+      padding-bottom: 0 !important;
+
+      @media (min-width: 641px) {
+        max-width: 680px !important;
+        width: 680px !important;
+      }
+    }
+
+    .ant-modal-content {
+      border: 3px solid #0d0f12 !important;
+      border-radius: 28px !important;
+      box-shadow: 8px 8px 0px #0d0f12 !important;
+      padding: 0 !important;
+      background-color: #ffffff;
+      max-width: 100% !important;
+      max-height: calc(100vh - 24px) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+
+      @media (max-width: 640px) {
+        border-width: 2px !important;
+        border-radius: 20px !important;
+        box-shadow: 3px 3px 0px #0d0f12 !important;
+        max-height: calc(100vh - 16px) !important;
+      }
+    }
+
+    .ant-modal-body {
+      padding: 0 !important;
+      max-width: 100% !important;
+      max-height: calc(100vh - 24px) !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
+    .ant-modal-close {
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      border: 2px solid #0d0f12;
+      border-radius: 8px;
+      background: #f1f3f7;
+      color: #0d0f12;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      z-index: 50;
+
+      &:hover {
+        background: #0d0f12;
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+

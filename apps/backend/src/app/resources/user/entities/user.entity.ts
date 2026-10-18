@@ -161,5 +161,10 @@ export class User extends Model {
   })
   deviceInfo: string; // Store device information
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  password: string; // Hashed password for admin accounts
 
 }

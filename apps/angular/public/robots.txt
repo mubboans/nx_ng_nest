@@ -1,0 +1,12 @@
+# robots.txt for MDX MOTORS Hypercar Monorepo
+User-agent: *
+Allow: /
+Allow: /home
+Allow: /models
+Allow: /test-drive
+
+# Disallow admin internal dashboard from indexing
+Disallow: /dashboard
+Disallow: /api/
+
+Sitemap: https://mdxmotors.com/sitemap.xml
